@@ -32,7 +32,7 @@ I've combined a "new" green version with one of these common RCD330-PQ adapter c
 Just remove the existing can module and cut the white/orange can bus wires between the plugs.<BR>
 Attach the green filter board in-line between the plugs using those white/orange wires.<BR>
 Each can bus interface on the green board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
-12V & GND (yellow/black) also need to be tapped into to power the green board.<BR>
+12V & GND (yellow/black) need to be tapped to power the green board.<BR>
 
 It is also necessary to remove the two 120ohm termination resistors on the the green board.
 
@@ -49,7 +49,7 @@ That led to the discovery of an exploit in STM32F0 series processors where RDP-1
 https://www.aisec.fraunhofer.de/en/FirmwareProtection.html
 
 Their example code runs on an STM32F051 (which I didn't have), so I ported it to a spare Black Pill.<BR>
-Amazingly, it worked and I now had a binary that could be reverse engineered with Ghidra.
+Amazingly, it worked and I now have a binary that could be reverse engineered with Ghidra.
 
 It turns out there are only a few messages being checked/modified:<BR>
 <li><B>0x2c3/0x575</B><BR>Reset the watch dog timer (for sleep/power down, when no can messages received)<BR>
