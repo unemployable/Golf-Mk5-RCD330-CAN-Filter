@@ -6,7 +6,8 @@ Allow an RCD330 Head Unit to work in a Golf MK5 (fixes steering buttons, brightn
 Rather than build my own hardware, I decided to search for an exisiting platform that could be easily modified.
 It needed to be something reasonably small but with dual can bus interfaces to enable full message filtering.
 
-This search led me to an interesting video: https://www.youtube.com/watch?v=f4af1OBU5nQ
+This search led me to an interesting video:
+  https://www.youtube.com/watch?v=f4af1OBU5nQ
 and then on to these pages:
   https://dangerouspayload.com/2020/03/10/hacking-a-mileage-manipulator-can-bus-filter-device
   https://giddi.net/posts/reversing-a-canbus-odometer-filter-manipulator
