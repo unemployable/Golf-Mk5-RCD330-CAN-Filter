@@ -7,7 +7,7 @@ https://rcd330plus.com/showthread.php?tid=6741
 **Hardware:**
 
 Rather than building my own hardware, I decided to search for an existing board that could be easily modified.<BR>
-It needed to be reasonably small, but with dual can bus interfaces to enable true message filtering.<BR>
+It needed to be reasonably small, but with Dual CAN Bus interfaces to enable true message filtering.<BR>
 Also, preferably capable of running directly off 12V.
 
 This search led me to an interesting video:<BR>
