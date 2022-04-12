@@ -41,7 +41,7 @@ Now any CAN message from the car will need to go through the green CAN filter to
 
 **Investigation:**
 
-I was curious how the existing can bus module on the original adapter cable worked.<BR>
+I was curious how the existing CAN bus module on the original adapter cable worked.<BR>
 What messages was it mysteriously modifying to allow the steering wheel buttons to work?
 
 Pulling it apart revealed an STM32F042 and although the SWD pins are exposed, the device is firmware locked using RDP level 1.<BR>
