@@ -6,7 +6,7 @@ https://rcd330plus.com/showthread.php?tid=6741
 
 **Hardware:**
 
-Rather than building my own hardware, I decided to search for an exisiting board that could be easily modified.<BR>
+Rather than building my own hardware, I decided to search for an existing board that could be easily modified.<BR>
 It needed to be reasonably small, but with dual can bus interfaces to enable true message filtering.<BR>
 Also, preferably capable of running directly off 12V.
 
@@ -29,7 +29,7 @@ I've combined a "new" green version with one of these common RCD330-PQ adapter c
   https://www.aliexpress.com/item/1005003052063834.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
 <IMG SRC="png/RCD330 CAN Adapter-small.png">
 	
-Just remove the exisiting can module and cut the white/orange can bus wires between the plugs.<BR>
+Just remove the existing can module and cut the white/orange can bus wires between the plugs.<BR>
 Attach the green filter board in-line between the plugs using those white/orange wires.<BR>
 Each can bus interface on the green board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
 12V & GND (yellow/black) also need to be tapped into to power the green board.<BR>
@@ -41,10 +41,10 @@ Now any CAN message from the car will need to go through the green CAN filter to
 
 **Investigation:**
 
-I was curious how the exisiting can bus module on the original adapter cable worked.<BR>
+I was curious how the existing can bus module on the original adapter cable worked.<BR>
 What messages was it mysteriously modifying to allow the steering wheel buttons to work?
 
-Pulling it appart revealed an STM32F042 and although the SWD pins are exposed, the device is firmware locked using RDP level 1.<BR>
+Pulling it apart revealed an STM32F042 and although the SWD pins are exposed, the device is firmware locked using RDP level 1.<BR>
 That led to the discovery of an exploit in STM32F0 series processors where RDP-1 can be bypassed:<BR>
 https://www.aisec.fraunhofer.de/en/FirmwareProtection.html
 
@@ -53,11 +53,11 @@ Amazingly, it worked and I now had a binary that could be reverse engineered wit
 
 It turns out there are only a few messages being checked/modified:<BR>
 <li><B>0x2c3/0x575</B><BR>Reset the watch dog timer (for sleep/power down, when no can messages received)<BR>
-<li><B>0x5c1</B><BR>Steeering Wheel buttons, Up/Down map to Next/Prev in RCD330<BR>
+<li><B>0x5c1</B><BR>Steering Wheel buttons, Up/Down map to Next/Prev in RCD330<BR>
 <li><B>0x436/0x439</B><BR>Presumably to fix power down issues, although my car does not send them.<BR>
-Its Can Gateway might be a verson that already sends power down messages that the RCD330 understands.
+Its Can Gateway might be a version that already sends power down messages that the RCD330 understands.
 
-The module changes the operation of the Up/Down buttons by switchng between two modes (using Menu/Ok).<BR>
+The module changes the operation of the Up/Down buttons by switching between two modes (using Menu/Ok).<BR>
 Pressing Menu ("MFD" mode), only the MFD screens are changed.<BR>
 Pressing Ok ("RCD330" mode), both the MFD and RCD330 are changed (i.e. it sends extra messages for Next/Prev to the RCD330).<BR>
 Unfortunately, there is no way to stop the MFD being updated by using a can bus filter at the radio.
@@ -80,13 +80,13 @@ I glued & soldered a couple of micro push button switches to the board for NRST 
 
 FTDI connections were also attached to the Tx, Rx & Gnd pins on the underside of the board.<BR>
 
-I could not figure out how to get exisiting CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
-Apprarently it should work, but the HAL libraries might be preventing it from working.<BR>
+I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
+Aprarently it should work, but the HAL libraries might be preventing it from working.<BR>
 I cheated by configuring the 3 spare "config" inputs and soldering links in parallel with each of the Rx pins (CAN1, CAN2 & USART).<BR>
 These extra GPIO inputs were then all configured as separate EXTI inputs (rising/falling) - seems to work fine...
 
 In the initial test version, I have also added an alternate function on the Mute button to send the Google Assistant (Siri) message in MFD mode.<BR>
-This was added becase the "Hey Google" voice detection on the RCD330 is a bit flaky at times.
+This was added because the "Hey Google" voice detection on the RCD330 is a bit flaky at times.
 
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
 	0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
@@ -94,7 +94,7 @@ The brightness message (lights off) was also detected and modified (as discussed
 
 I found 0xfe & 0xff actually made the display dim, 0xfd seems to be the max.
 
-All other 0x635 messages are sent through unchanged, so the variable dash back light adjustement still works on the RCD330:<BR>
+All other 0x635 messages are sent through unchanged, so the variable dash back light adjustment still works on the RCD330:<BR>
 0x635 [3] 0xNN 0x00 0x00 (where 0xNN varies from 0x1d to 0x62)<BR>
 
 I have also implemented the 0x436 & 0x439 filtering, but it does not seem to be invoked in my car.
