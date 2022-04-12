@@ -34,7 +34,7 @@ Attach the green filter board in-line between the plugs using those white/orange
 Each CAN bus interface on the green board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
 12V & GND (yellow/black) need to be tapped to power the green board.<BR>
 
-It is also necessary to remove the two 120ohm termination resistors on the the green board.
+It is also necessary to remove the two 120 ohm termination resistors on the the green board.
 
 Now any CAN message from the car will need to go through the green CAN filter to get to the radio (and vice versa).
 
