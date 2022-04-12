@@ -19,12 +19,12 @@ These STM32 boards are readily available for under AU$30<BR>
   https://www.aliexpress.com/item/4000238881021.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn<BR>
 <IMG SRC="png/Dual CAN Filter - small.png">
 	
-Most of the green versions are newer than in the articles above, using different GPIO ports with serial pins on the back.
+Most of the green versions are newer than in the articles above, using different GPIO ports & serial pins on the back.
 
-It is still possible to buy the older green version, but it's almost twice the price:
+It is still possible to buy the older green version, but it's almost twice the price:<BR>
   https://www.aliexpress.com/item/1005003130024266.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
 
-I've combined a "new" green version with one of the usual RCD330-PQ adapter cables:<BR>
+I've combined a "new" green version with one of the common RCD330-PQ adapter cables:<BR>
   https://www.aliexpress.com/item/1005003052063834.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
 <IMG SRC="png/RCD330 CAN Adapter-small.png">
 	
