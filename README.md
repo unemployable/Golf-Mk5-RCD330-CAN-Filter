@@ -26,7 +26,8 @@ It is still possible to buy the older green version, but it's almost twice the p
 
 I've combined a "new" green version with one of the usual RCD330-PQ adapter cables:<BR>
   https://www.aliexpress.com/item/1005003052063834.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
-
+<IMG SRC="RCD330 CAN Adapter - small.png">
+	
 Just remove the exisiting can module and cut the orange/white can bus wires between the plugs.<BR>
 Attach the green filter board in-line between the plugs using these wires.<BR>
 Each can bus interface on the green board will attach to a separate plug.<BR>
