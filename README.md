@@ -1,7 +1,7 @@
 # Golf-Mk5-Dual-CAN-Filter
 Allow an RCD330 Head Unit to work in a Golf MK5 (fixes steering wheel buttons, screen brightness and adds a Google Assistant button)
 
-This project is based on the great ideas and information in this forum:<BR>
+This project is based on great ideas and information in this forum:<BR>
 https://rcd330plus.com/showthread.php?tid=6741
 
 **Hardware:**
