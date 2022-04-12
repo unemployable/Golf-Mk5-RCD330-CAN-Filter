@@ -101,6 +101,9 @@ All other 0x635 messages are sent through unchanged, so the variable dash back l
 
 I have also implemented the 0x436 & 0x439 filtering, but it does not seem to be invoked in my car.
 
+Power consumption is not great, around 50ma running and 20ma in sleep/stop mode.
+The CAN drivers on these boards (TJA1050) do not have a low power standby mode.
+Unlike the original Chinese CAN module which uses a TJA1042.
 
 **Future Work:**
 
