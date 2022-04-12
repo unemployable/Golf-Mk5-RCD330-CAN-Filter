@@ -77,7 +77,7 @@ I needed to also manually use STM32CubeProgrammer (UART support) for flashing th
 
 This meant the device had to be manually put into bootloader mode.<BR>
 I glued & soldered a couple of micro push button switches to the board for NRST & BOOT0.<BR>
-BOOT0 is available on the one off the pads on the back of the board.  NRST is connected to a cap on the top. 
+BOOT0 is available on one of the pads on the back of the board.  NRST is connected to a cap on the top. 
 
 FTDI connections were also attached to the Tx, Rx & Gnd pins on the underside of the board.<BR>
 
