@@ -6,8 +6,9 @@ https://rcd330plus.com/showthread.php?tid=6741
 
 **Hardware:**
 
-Rather than build my own hardware, I decided to search for an exisiting board that could easily be modified.<BR>
-It needed to be something reasonably small but with dual can bus interfaces to enable full message filtering.
+Rather than build my own hardware, I decided to search for an exisiting board that could be easily modified.<BR>
+It needed to be something reasonably small but with dual can bus interfaces to enable full message filtering.<BR>
+Also, preferably capable of running directly off 12V.
 
 This search led me to an interesting video:<BR>
  https://www.youtube.com/watch?v=f4af1OBU5nQ<BR>
@@ -28,9 +29,9 @@ I've combined a "new" green version with one of these common RCD330-PQ adapter c
   https://www.aliexpress.com/item/1005003052063834.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
 <IMG SRC="png/RCD330 CAN Adapter-small.png">
 	
-Just remove the exisiting can module and cut the orange/white can bus wires between the plugs.<BR>
-Attach the green filter board in-line between the plugs using these wires.<BR>
-Each can bus interface on the green board will attach to a separate plug.<BR>
+Just remove the exisiting can module and cut the white/orange can bus wires between the plugs.<BR>
+Attach the green filter board in-line between the plugs using those white/orange wires.<BR>
+Each can bus interface on the green board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
 12V & GND (yellow/black) also need to be tapped into to power the green board.<BR>
 
 It is also necessary to remove the two 120ohm termination resistors on the the green board.
