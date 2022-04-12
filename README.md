@@ -29,9 +29,9 @@ I've combined a "new" green version with one of these common RCD330-PQ adapter c
   https://www.aliexpress.com/item/1005003052063834.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
 <IMG SRC="png/RCD330 CAN Adapter-small.png">
 	
-Just remove the existing can module and cut the white/orange can bus wires between the plugs.<BR>
+Just remove the existing CAN module and cut the white/orange CAN bus wires between the plugs.<BR>
 Attach the green filter board in-line between the plugs using those white/orange wires.<BR>
-Each can bus interface on the green board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
+Each CAN bus interface on the green board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
 12V & GND (yellow/black) need to be tapped to power the green board.<BR>
 
 It is also necessary to remove the two 120ohm termination resistors on the the green board.
@@ -52,10 +52,10 @@ Their example code runs on an STM32F051 (which I didn't have), so I ported it to
 Amazingly, it worked and I now have a binary that could be reverse engineered with Ghidra.
 
 It turns out there are only a few messages being checked/modified:<BR>
-<li><B>0x2c3/0x575</B><BR>Reset the watch dog timer (for sleep/power down, when no can messages received)<BR>
+<li><B>0x2c3/0x575</B><BR>Reset the watch dog timer (for sleep/power down, when no CAN messages received)<BR>
 <li><B>0x5c1</B><BR>Steering Wheel buttons, Up/Down map to Next/Prev in RCD330<BR>
 <li><B>0x436/0x439</B><BR>Presumably to fix power down issues, although my car does not send them.<BR>
-Its Can Gateway might be a version that already sends power down messages that the RCD330 understands.
+Its CAN Gateway might be a version that already sends power down messages that the RCD330 understands.
 
 The module changes the operation of the Up/Down buttons by switching between two modes (using Menu/Ok).<BR>
 Pressing Menu ("MFD" mode), only the MFD screens are changed.<BR>
