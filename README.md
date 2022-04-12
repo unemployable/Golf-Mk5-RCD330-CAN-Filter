@@ -77,6 +77,7 @@ I needed to also manually use STM32CubeProgrammer (UART support) for flashing th
 
 This meant the device had to be manually put into bootloader mode.<BR>
 I glued & soldered a couple of micro push button switches to the board for NRST & BOOT0.<BR>
+BOOT0 is available on the one off the pads on the back of the board.  NRST is connected to a cap on the top. 
 
 FTDI connections were also attached to the Tx, Rx & Gnd pins on the underside of the board.<BR>
 
@@ -96,7 +97,7 @@ I found 0xfe & 0xff actually made the display dim, 0xfd seems to be the max.<BR>
 It is now so bright, I am running the RCD330 in its "darkest" screen setting.
 
 All other 0x635 messages are sent through unchanged, so the variable dash back light adjustment still works on the RCD330:<BR>
-0x635 [3] 0xNN 0x00 0x00 (where 0xNN varies from 0x1d to 0x62)<BR>
+	0x635 [3] <B>0xNN</B> 0x00 0x00 (where <B>0xNN</B> varies from 0x1d to 0x62)<BR>
 
 I have also implemented the 0x436 & 0x439 filtering, but it does not seem to be invoked in my car.
 
