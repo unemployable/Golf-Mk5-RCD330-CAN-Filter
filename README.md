@@ -52,18 +52,18 @@ Their example code runs on an STM32F051 (which I didn't have), so I ported it to
 Amazingly, it worked and I now had a binary that could be reverse engineered with Ghidra.
 
 It turns out there are only a few messages being checked/modified:<BR>
-0x2c3/0x575	Reset the watch dog timer (for sleep/power down, when no can messages received)<BR>
-0x5c1		Steeering Wheel buttons<BR>
-0x436/0x439	Presumably to fix power down (although my car does not send them).<BR>
-		My car's Can Gateway might be a verson that already sends power down messages that the RCD330 understands.
+<li><B>0x2c3/0x575</B>	Reset the watch dog timer (for sleep/power down, when no can messages received)<BR>
+<li><B>0x5c1</B>	Steeering Wheel buttons<BR>
+<li><B>0x436/0x439</B>	Presumably to fix power down (although my car does not send them).<BR>
+My car's Can Gateway might be a verson that already sends power down messages that the RCD330 understands.
 
 The module changes the operation of the Up/Down buttons by switchng between two modes (using Menu/Ok).<BR>
-Pressing Menu ("MFD" mode), only the MFD menus are changed.<BR>
+Pressing Menu ("MFD" mode), only the MFD screens are changed.<BR>
 Pressing Ok ("RCD330" mode), both the MFD and RCD330 are changed (i.e. it sends extra messages for Next/Prev to the RCD330).<BR>
 Unfortunately, there is no way to stop the MFD being updated by using a can bus filter at the radio.
 
-My car only has an MFD (midline) display which does not use the Menu button - which is fine.<BR>
-However, using the Ok button for switch modes is annoying, as it impacts the MFD on several screens.<BR>
+My car only has an MFD (midline) display which does not use the Menu button, making it available for other uses.<BR>
+However, using the Ok button to switch modes is annoying, as it will still impact the MFD on several screens.<BR>
 
 
 **Implementation:**
