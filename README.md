@@ -92,7 +92,7 @@ The brightness message (lights off) was also detected and modified (as discussed
 	0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
 	0x635 [3] 0x00 0x00 <B>0xfd</B><BR>
 
-I found 0xfe & 0xff actually made the display dim, 0xfd seems to be the max.
+I found 0xfe & 0xff actually made the display dim, 0xfd seems to be the max.<BR>
 It is now so bright, I am running the RCD330 in its "darkest" setting.
 
 All other 0x635 messages are sent through unchanged, so the variable dash back light adjustment still works on the RCD330:<BR>
