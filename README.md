@@ -49,7 +49,7 @@ That led to the discovery of an exploit in STM32F0 series processors where RDP-1
 https://www.aisec.fraunhofer.de/en/FirmwareProtection.html
 
 Their example code runs on an STM32F051 (which I didn't have), so I ported it to a spare Black Pill.<BR>
-Amazingly, it worked and I now have a binary that could be reverse engineered with Ghidra.
+Amazingly, it worked and I now have a binary that can be reverse engineered with Ghidra.
 
 It turns out there are only a few messages being checked/modified:<BR>
 <li><B>0x2c3/0x575</B><BR>Reset the watch dog timer (for sleep/power down, when no CAN messages received)<BR>
