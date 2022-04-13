@@ -69,7 +69,7 @@ My car only has an MFD (Midline, Multi Function Display) in the instrument clust
 ## Implementation
 
 I chose the "new" green filter board as it had a couple of features I thought might help during development.<BR>
-There is an on board LED (toggle on receiving CAN messages) and it uses serial (for simple control/debug messages) rather than SWD.<BR>
+There is an on board LED (toggle on receiving CAN messages) and it uses serial (for simple control/debug messages) rather than SWD.  
 Unfortunately this made programming it a little more difficult.<BR>
 
 Arduino IDE does not support the STM32F105/107 used on these blue/green filter boards.<BR>
