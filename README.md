@@ -107,7 +107,7 @@ Power consumption is not great, around 50ma running and 20ma in sleep/stop mode.
 The CAN drivers on these boards (TJA1050) do not have a low power standby mode.<BR>
 Unlike the original Chinese CAN module which uses a TJA1042.
 
-**Future Work:**
+## Future Work
 
 If the prototype proves to work reliably, I am considering some enhancements:
 
