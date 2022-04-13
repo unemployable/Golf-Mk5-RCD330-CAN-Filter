@@ -59,8 +59,8 @@ It turns out there are only a few messages being checked/modified:<BR>
 Its CAN Gateway might be a version that already sends power down messages that the RCD330 understands.
 
 The module changes the operation of the Up/Down buttons by switching between two modes (using Menu/Ok).<BR>
-Pressing Menu ("MFD" mode), only the MFD screens are changed.<BR>
-Pressing Ok ("RCD330" mode), both the MFD and RCD330 are changed (i.e. it sends extra messages for Next/Prev to the RCD330).<BR>
+Pressing Menu (*MFD* mode), only the MFD screens are changed.<BR>
+Pressing Ok (*RCD330* mode), both the MFD and RCD330 are changed (i.e. it sends extra messages for Next/Prev to the RCD330).<BR>
 Unfortunately, there is no way to stop the MFD being updated by using a CAN bus filter at the radio.
 
 My car only has an MFD (Midline, Multi Function Display) in the instrument cluster which does not use the Menu button, making it available for other uses.  However, using the Ok button to switch modes is annoying, as it will still impact the MFD on several screens.<BR>
