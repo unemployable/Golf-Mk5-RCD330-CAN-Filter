@@ -74,7 +74,7 @@ Unfortunately this made programming it a little more difficult.<BR>
 
 Arduino IDE does not support the STM32F105/107 used on these blue/green filter boards.<BR>
 I ended up using STM32CubeIDE, but it only supports programming via SWD/JTAG, not serial.<BR>
-I needed to also manually use STM32CubeProgrammer (UART support) for flashing the firmware.<BR>
+Flashing was done separately using STM32CubeProgrammer in UART mode.<BR>
 
 This meant the device had to be manually put into bootloader mode.<BR>
 I glued & soldered a couple of micro push button switches to the board for NRST & BOOT0.<BR>
