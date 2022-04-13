@@ -119,3 +119,4 @@ If the prototype proves to be reliable, I am considering some enhancements:
 * In *RCD330* mode: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons (using MQB msgs?).
 * Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption (or perahps replace with TJA1042).
+  Would need to sacrifice the USART1 EXTI *"conf"* input.
