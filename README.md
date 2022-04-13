@@ -4,7 +4,7 @@ Allow an RCD330 Head Unit to work in a Golf MK5 (fixes steering wheel buttons, s
 This project is based on great ideas and information found in this forum:<BR>
 https://rcd330plus.com/showthread.php?tid=6741
 
-**Hardware:**
+## Hardware
 
 Rather than building my own hardware, I decided to search for an existing board that could be easily modified.<BR>
 It needed to be reasonably small, but with Dual CAN Bus interfaces to enable true message filtering.<BR>
@@ -39,7 +39,7 @@ It is also necessary to remove the two 120 ohm termination resistors on the the 
 Now any CAN message from the car will need to go through the green CAN filter to get to the radio (and vice versa).
 
 
-**Investigation:**
+## Investigation
 
 I was curious how the CAN bus module on the original adapter cable worked.<BR>
 What messages was it mysteriously modifying to allow the steering wheel buttons to work?
@@ -65,7 +65,7 @@ Unfortunately, there is no way to stop the MFD being updated by using a CAN bus 
 My car only has an MFD (Midline, Multi Function Display) in the instrument cluster which does not use the Menu button, making it available for other uses.  However, using the Ok button to switch modes is annoying, as it will still impact the MFD on several screens.<BR>
 
 
-**Implementation:**
+## Implementation
 
 I chose the "new" green filter board as it had a couple of features I thought might help during development.<BR>
 There is an on board LED (toggle on receiving CAN messages) and it uses serial (for simple control/debug messages) rather than SWD.<BR>
