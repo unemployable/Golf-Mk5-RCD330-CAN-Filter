@@ -90,15 +90,15 @@ In the initial test version, I have also added an alternate function on the Mute
 This was added because the "Hey Google" voice detection on the RCD330 is a bit flaky at times.
 
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
-	0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
-	0x635 [3] 0x00 0x00 <B>0xfd</B><BR>
+0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
+0x635 [3] 0x00 0x00 <B>0xfd</B><BR>
 
 I found 0xfe & 0xff actually made the display dim, 0xfd seems to be the max.<BR>
 It is now so bright, I am running the RCD330 in its "darkest" screen setting.<BR>
 I will probably change it to 0xdc in the next version.
 
 All other 0x635 messages are sent through unchanged, so the variable dash back light adjustment still works on the RCD330:<BR>
-	0x635 [3] <B>0xNN</B> 0x00 0x00 (where <B>0xNN</B> varies from 0x1d to 0x62)<BR>
+0x635 [3] <B>0xNN</B> 0x00 0x00 (where <B>0xNN</B> varies from 0x1d to 0x62)<BR>
 
 I have also implemented the 0x436 & 0x439 filtering, but it does not seem to be invoked in my car.
 
@@ -110,8 +110,8 @@ Unlike the original Chinese CAN module which uses a TJA1042.
 
 If the prototype proves to work reliably, I am considering some enhancements:
 
-<li>Port the s/w to the "blue" board (SWD), just to make sure it can also work.
-<li>Move the Ok button "RCD330" default mode to a long press of the Menu button.
-<li>In "RCD330" mode: after sending an Up/Down message, immediately send the opposite message (to try and "hide"/work around MFD changes).
-<li>See if there are any other useful RCD300 messages that could also be activated from the steering wheel buttons (via MQB msgs?).
-<li>Swap the CAN drivers with TJA1042, to improve power consumption.
+* Port the s/w to the "blue" board (SWD), just to make sure it can also work.
+* Move the Ok button "RCD330" default mode to a long press of the Menu button.
+* In "RCD330" mode: after sending an Up/Down message, immediately send the opposite message (to try and "hide"/work around MFD changes).
+* See if there are any other useful RCD300 messages that could also be activated from the steering wheel buttons (via MQB msgs?).
+* Swap the CAN drivers with TJA1042, to improve power consumption.
