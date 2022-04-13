@@ -83,8 +83,8 @@ FTDI connections were also attached to the Tx, Rx & Gnd pads on the underside of
 
 I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
 Aprarently it should work, but the HAL libraries might be preventing it from working.<BR>
-I cheated by configuring the 3 spare "config" inputs and soldering links in parallel with each of the Rx pins (CAN1, CAN2 & USART).<BR>
-These extra GPIO inputs were then all configured as separate EXTI inputs (rising/falling) - seems to work fine...
+I cheated by configuring the 3 spare "config" inputs and soldering links in parallel with each of the Rx pins (CAN1, CAN2 & USART1).<BR>
+These extra GPIO pins were then all configured as separate EXTI inputs (rising/falling) - seems to work fine...
 
 In the initial test version, I have also added an alternate function on the Mute button to send the Google Assistant (Siri) message in MFD mode.<BR>
 This was added because the "Hey Google" voice detection on the RCD330 is a bit flaky at times.
