@@ -108,7 +108,7 @@ Unlike the original Chinese CAN module which uses a TJA1042.
 
 ## Future Work
 
-If the prototype proves to work reliably, I am considering some enhancements:
+If the prototype proves to be reliable, I am considering some enhancements:
 
 * Port the s/w to the Blue CAN Filter (SWD), just to make sure it can also work.
 * Reduce the brightness a bit (using 0xdc value).
