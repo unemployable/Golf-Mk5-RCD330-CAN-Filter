@@ -112,7 +112,8 @@ Unlike the original Chinese CAN module which uses a TJA1042.
 If the prototype proves to work reliably, I am considering some enhancements:
 
 * Port the s/w to the "blue" board (SWD), just to make sure it can also work.
+* Reduce the brightness a bit (using 0xdc value).
 * Move the Ok button "RCD330" default mode to a long press of the Menu button.
-* In "RCD330" mode: after sending an Up/Down message, immediately send the opposite message (to try and "hide"/work around MFD changes).
-* See if there are any other useful RCD300 messages that could also be activated from the steering wheel buttons (via MQB msgs?).
-* Swap the CAN drivers with TJA1042, to improve power consumption.
+* In "RCD330" mode: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
+* See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons (using MQB msgs?).
+* Swap the CAN drivers with TJA1042, to try and improve power consumption.
