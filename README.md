@@ -103,8 +103,9 @@ All other 0x635 messages are sent through unchanged, so the variable dash back l
 I have also implemented the 0x436 & 0x439 filtering, but it does not seem to be invoked in my car.
 
 Power consumption is not great, around 50ma running and 20ma in sleep/stop mode.<BR>
-The CAN drivers on these boards (TJA1050) do not have a low power standby mode.<BR>
-Unlike the original Chinese CAN module which uses a TJA1042.
+The CAN drivers on these boards (VP1050?) seem to have pin 8 (S) permanently connected to Gnd.<BR>
+If this is a clone of the TI SN65HVD1050, it forces "high-speed mode" and has the highest consumption (typ. 50mA).<BR>
+Tying this to vcc should enable "listen-only silent mode" (typ. 6mA), which would be great combined with STM32 sleep/stop mode.
 
 ## Future Work
 
@@ -115,4 +116,4 @@ If the prototype proves to be reliable, I am considering some enhancements:
 * Move the Ok button *RCD330* default mode to a long press of the Menu button.
 * In *RCD330* mode: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons (using MQB msgs?).
-* Swap the CAN drivers with TJA1042, to try and reduce power consumption.
+* Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption (or perahps replace with TJA1042).
