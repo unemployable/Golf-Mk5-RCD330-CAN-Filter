@@ -4029,5 +4029,3 @@ void FUN_MAIN_LOOP_08000c68(void)
                     // stop mode...
   } while( true );
 }
-
-
