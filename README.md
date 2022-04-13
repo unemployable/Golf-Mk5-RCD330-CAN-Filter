@@ -4,6 +4,7 @@ Allow an RCD330 Head Unit to work in a Golf MK5 (fixes steering wheel buttons, s
 This project is based on great ideas and information found in this forum:<BR>
 https://rcd330plus.com/showthread.php?tid=6741
 
+	
 ## Hardware
 
 Rather than building my own hardware, I decided to search for an existing board that could be easily modified.<BR>
