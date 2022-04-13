@@ -115,4 +115,4 @@ If the prototype proves to work reliably, I am considering some enhancements:
 * Move the Ok button *RCD330* default mode to a long press of the Menu button.
 * In *RCD330* mode: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons (using MQB msgs?).
-* Swap the CAN drivers with TJA1042, to try and improve power consumption.
+* Swap the CAN drivers with TJA1042, to try and reduce power consumption.
