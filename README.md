@@ -102,7 +102,7 @@ All other 0x635 messages are sent through unchanged, so the variable dash back l
 
 I have also implemented the 0x436 & 0x439 filtering, but it does not seem to be invoked in my car.
 
-Power consumption is not great, around 50ma running and 20ma in sleep/stop mode.<BR>
+Power consumption is not that great, around 50ma running and 20ma in sleep/stop mode.<BR>
 The CAN drivers on these boards (VP1050?) seem to have pin 8 (S) permanently connected to Gnd.<BR>
 If this is a clone of the TI SN65HVD1050, it forces "high-speed mode" and has the highest consumption (typ. 50mA).<BR>
 Tying this to Vcc should enable "listen-only silent mode" (typ. 6mA), which would be great combined with STM32 sleep/stop mode.<BR>
