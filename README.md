@@ -88,7 +88,7 @@ Aprarently it should work, but the HAL libraries might be preventing it from wor
 I cheated by configuring the 3 spare *"config"* inputs and soldering links in parallel with each of the Rx pins (CAN1, CAN2 & USART1).<BR>
 These extra GPIO pins were then all configured as separate EXTI inputs (rising/falling) - seems to work fine...
 
-In the initial test version, I have also added an alternate function on the Mute button to send the Google Assistant (Siri) message in MFD mode.<BR>
+In the initial test version, I have also added an alternate function on the Mute (Star) button to send the Google Assistant (Siri) message in MFD mode.<BR>
 This was added because the *"Hey Google"* voice detection on the RCD330 is a bit flaky at times.
 
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
