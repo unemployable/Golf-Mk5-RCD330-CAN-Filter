@@ -61,8 +61,8 @@ It turns out there are only a few messages being checked/modified:<BR>
 Its CAN Gateway might be a version that already sends power down messages that the RCD330 understands.
 
 The module changes the operation of the Up/Down buttons by switching between two modes (using Menu/Ok).<BR>
-Pressing Menu (*MFD* mode), only the MFD screens are changed.<BR>
-Pressing Ok (*RCD330* mode), both the MFD and RCD330 are changed (i.e. it sends extra messages for Next/Prev to the RCD330).<BR>
+Pressing Menu (*MFD mode*), only the MFD screens are changed.<BR>
+Pressing Ok (*RCD330 mode*), both the MFD and RCD330 are changed (i.e. it sends extra messages for Next/Prev to the RCD330).<BR>
 Unfortunately, there is no way to stop the MFD being updated by using a CAN bus filter at the radio.
 
 My car only has an MFD (Midline, Multi Function Display) in the instrument cluster which does not use the Menu button, making it available for other uses.  However, using the Ok button to switch modes is annoying, as it will still impact the MFD on several screens.<BR>
@@ -88,7 +88,7 @@ Aprarently it should work, but the HAL libraries might be preventing it from wor
 I cheated by configuring the 3 spare *"config"* inputs and soldering links in parallel with each of the Rx pins (CAN1, CAN2 & USART1).<BR>
 These extra GPIO pins were then all configured as separate EXTI inputs (rising/falling) - seems to work fine...
 
-I have also added an alternate function on the Mute (Star) button to send the Google Assistant (Siri) message in MFD mode.<BR>
+I have also added an alternate function on the Mute (Star) button to send the Google Assistant (Siri) message in *MFD mode*.<BR>
 This was done because the *"Hey Google"* voice detection on the RCD330 is a bit flaky at times.
 
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
@@ -117,8 +117,8 @@ If the prototype proves to be reliable, I am considering some enhancements:
 
 * Port the s/w to the Blue CAN Filter (SWD), just to make sure it can also work.
 * Reduce the brightness a bit (using 0xdc value).
-* Move the Ok button *RCD330* default mode to a long press of the Menu button.
-* In *RCD330* mode: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
+* Move the Ok button *RCD330 default mode* to a long press of the Menu button.
+* In *RCD330 mode*: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons (using MQB msgs?).
 * Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption (or perahps replace with TJA1042).<BR>
   Would need to sacrifice the USART1 EXTI *"conf"* input (as GPIO ouput to the *"S"* pin).
