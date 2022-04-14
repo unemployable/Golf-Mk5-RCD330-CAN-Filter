@@ -4,7 +4,7 @@ Allow an RCD330 Head Unit to work in a Golf MK5 (fixes steering wheel buttons, s
 This project is based on great ideas and information found in this forum:<BR>
 https://rcd330plus.com/showthread.php?tid=6741
 
-This is still very much a work in progress.
+This is still very much a work in progress.<BR>
 A prototype is currently being tested in a 2007 Golf Mk5 2.0 FSI.
 	
 ## Hardware
