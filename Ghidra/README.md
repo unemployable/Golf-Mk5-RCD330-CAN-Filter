@@ -9,7 +9,7 @@ Included files are an original dumped binary, Ghidra zip file (gzf) & an export 
 It makes use of Thomas Roth's excellent SVD-Loader scripts.
 
 This is my first, amateur attempt to decompile an STM32 binary.<BR>
-I have tried to include lots of comment to assist with my understanding of the code.
+I have tried to include lots of comments to assist with my understanding of the code.
 
 The most interesting function is the CAN interrupt routine *FUN_CAN_INT_MAIN_080004d8()*, where the message filtering takes place.<BR>
 If no CAN msgs are received, it will trigger the IWDG watchdog timeout, which causes a reset and it will immediately go into sleep/stop mode.<BR>
