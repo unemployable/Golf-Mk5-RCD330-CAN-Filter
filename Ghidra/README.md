@@ -8,6 +8,6 @@ Included are an original dumped binary, Ghidra package file (gzf) & an export of
   
 It makes use of Thomas Roth's excellent SVD-Loader scripts.
 
-This is my first amateur attempt to decompile an STM32 binary.<BR>
+This is my first, amateur attempt to decompile an STM32 binary.<BR>
 I have tried to include as many comments as possible, to assist my understanding of the code.
   
