@@ -120,7 +120,7 @@ If the prototype proves to be reliable, I am considering some enhancements:
 * Port the s/w to the Blue CAN Filter (SWD), just to make sure it can also work.
 * Reduce the brightness a bit (using 0xdc value).
 * Move the Ok button *RCD330 default mode* to a long press of the Menu button.
-* Move the Google Assitant button from *Ok mode* to a long press of Mute/Star.
+* Move the Google Assitant button from *MFD mode* to a long press of Mute/Star.
 * In *RCD330 mode*: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons.
 * Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption (or perahps replace with TJA1042).<BR>
