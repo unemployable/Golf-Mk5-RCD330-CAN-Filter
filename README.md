@@ -1,4 +1,4 @@
-# Golf Mk5 RCD330 CAN Filter
+# Golf Mk5 RCD330 CAN Filter #
 Allow an RCD330 Head Unit to work in a Golf Mk5 (fixes steering wheel buttons, screen brightness and adds a Google Assistant button)
 
 This project is based on great ideas and information found in this forum:<BR>
@@ -7,7 +7,7 @@ https://rcd330plus.com/showthread.php?tid=6741
 This is still very much a work in progress.<BR>
 A prototype is currently being tested in a 2007 2.0 FSI Comfortline.
 	
-## Hardware
+## Hardware ##
 
 Rather than building my own hardware, I decided to search for an existing board that could be easily modified.<BR>
 It needed to be reasonably small, but with Dual CAN Bus interfaces to enable true message filtering.<BR>
@@ -42,7 +42,7 @@ It is also necessary to remove the two 120 ohm termination resistors on the the 
 Now any CAN message from the car will need to go through the green CAN filter to get to the radio (and vice versa).
 
 
-## Investigation
+## Investigation ##
 
 I was curious how the CAN bus module on the original adapter cable worked.<BR>
 What messages was it mysteriously modifying to allow the steering wheel buttons to work?
@@ -68,7 +68,7 @@ Unfortunately, there is no way to stop the MFD being updated by using a CAN bus 
 My car only has an MFD (Midline, Multi Function Display) in the instrument cluster which does not use the Menu button, making it available for other uses.  However, using the Ok button to switch modes is annoying, as it will still impact the MFD on several screens.<BR>
 
 
-## Implementation
+## Implementation ##
 
 I chose the "new" green filter board as it had a couple of features I thought might help during development.<BR>
 There is an on board LED (toggle on receiving CAN messages) and it uses serial (for simple control/debug messages) rather than SWD.  Unfortunately this made programming it a little more difficult.
@@ -113,7 +113,7 @@ As the CAN Driver runs on 5V and the STM32 on 3.3V, controlling the "S" pin dire
 Vehicle time & temperature on the RCD330 also works (i.e. when not using Android Auto / CarPlay).
 
 
-## Future Work
+## Future Work ##
 
 If the prototype proves to be reliable, I am considering some enhancements:
 
