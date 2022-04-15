@@ -10,4 +10,5 @@ It makes use of Thomas Roth's excellent SVD-Loader scripts.
 
 This is my first, amateur attempt to decompile an STM32 binary.<BR>
 I have tried to include as many comments as possible, to assist my understanding of the code.
-  
+
+The most interesting function is the CAN interrupt routine *FUN_CAN_INT_MAIN_080004d8()*, where the Message Filtering takes place.
