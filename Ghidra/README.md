@@ -4,7 +4,7 @@
 These devices only seem to be available as part of an adapter cable.<BR>
 I've found at least two versions, with only minor differences in the code.
 
-Included are an original dumped binary, Ghidra package file (gzf) & an export of the decompiled 'C' code.
+Included files are an original dumped binary, Ghidra package file (gzf) & an export of the decompiled 'C' code.
   
 It makes use of Thomas Roth's excellent SVD-Loader scripts.
 
