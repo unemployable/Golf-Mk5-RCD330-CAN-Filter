@@ -117,7 +117,7 @@ Vehicle time & temperature on the RCD330 also works (i.e. when not using Android
 
 If the prototype proves to be reliable, I am considering some enhancements:
 
-* Port the s/w to the Blue CAN Filter (SWD), just to make sure it can also work.
+* Port s/w to the Blue CAN Filter (SWD), just to make sure it can also work.
 * Reduce the brightness a bit (try 0xdc value).
 * Move the Ok button *RCD330 default mode* to a long press of the Menu button.
 * Move the Google Assitant button from *MFD mode* to a long press of Mute/Star.
