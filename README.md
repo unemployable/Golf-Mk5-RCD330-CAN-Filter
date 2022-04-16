@@ -23,21 +23,17 @@ These STM32 boards are readily available for under AU$30<BR>
   https://www.aliexpress.com/item/4000238881021.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn<BR>
 ![Green CAN Filter](pics/Dual_CAN_Filter_blue_small.png)
 	
-Most of the green versions are newer than in the articles above, using different GPIO ports & serial pins on the back.
-
-It is still possible to buy the older green version, but it's almost twice the price:<BR>
-  https://www.aliexpress.com/item/1005003130024266.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
-
-I've combined a "new" green version with one of these common RCD330-PQ adapter cables:<BR>
+I've combined the blue version with a common RCD330-PQ adapter cables (although a cheaper version):<BR>
   https://www.aliexpress.com/item/1005003052063834.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
 ![RCD330-PQ-Adapter](pics/RCD330_CAN_Adapter_small.png)
 	
-Just remove the existing CAN module and cut the white/orange CAN bus wires between the plugs.<BR>
-Attach the green filter board in-line between the plugs using those white/orange wires.<BR>
-Each CAN bus interface on the green board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
+Just remove the existing CAN module and cut the CAN bus wires between the plugs.<BR>
+Attach the blue filter board in-line between the plugs using those wires.<BR>
+Each CAN bus interface on the blue board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
 12V & GND (yellow/black) need to be tapped to power the green board.<BR>
 
-It is also necessary to remove the two 120 ohm termination resistors on the the green board.
+It is also necessary to make sure the solder links for the two 120 ohm termination resistors are not connected.
+Note: during testing, I had to short these out in order to work with a Dual CAN tester using #CANPro Analyzer# s/w.
 
 Now any CAN message from the car will need to go through the green CAN filter to get to the radio (and vice versa).
 
