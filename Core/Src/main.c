@@ -44,7 +44,7 @@ CAN_HandleTypeDef hcan2;
 
 IWDG_HandleTypeDef hiwdg;
 
-UART_HandleTypeDef huart4;
+UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
@@ -82,10 +82,10 @@ uint config_loss;
 // magic value used to check if the variables are initialized
 __attribute__((section(".noinit"))) volatile uint32_t reset_count_magic;
 
+//__attribute__((section(".noinit"))) volatile uint32_t filter_mode = 0;
+
 // reset counter, incremented on every warm reset
 __attribute__((section(".noinit"))) volatile uint32_t reset_count;
-
-#define WATCHDOG
 
 struct
 {
@@ -100,8 +100,8 @@ __attribute__((section(".noinit"))) volatile struct
 {
 	uint up_next_code;
 	uint down_prev_code;
-//	uint mute_google;	// try to swap b/w mute and "hey google"
-} button_state = { 0x02, 0x03 /*, 0x2b*/};  // RCD330 next/prev by default, otherwise MFD Up 0x22 / Down 0x23
+	uint mute_google;	// try to swap b/w mute and "hey google"
+} button_state = { 0x02, 0x03, 0x2b};  // RCD330 next/prev by default, otherwise MFD Up 0x22 / Down 0x23
 
 
 __attribute__((section(".noinit"))) volatile struct
@@ -116,8 +116,10 @@ __attribute__((section(".noinit"))) volatile struct
 
 	uint enable_led;
 
-} debug_mode = { 0, 0, 0, 0, 0xdc, 0, 0x5c1, 0};
-//} debug_mode = { 1, 1, 1, 1, 0xdc, 0, 0x5c1, 1};
+	uint filter_mode;
+
+//} debug_mode = { 0, 0, 0, 0, 0xdc, 0, 0x5c1, 0, 0};
+} debug_mode = { 0, 0, 0, 0, 0xfd, 0, 0x5c1, 0, 0};
 
 
 struct
@@ -163,7 +165,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_CAN1_Init(void);
 static void MX_CAN2_Init(void);
-static void MX_UART4_Init(void);
+static void MX_USART1_UART_Init(void);
 static void MX_IWDG_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -171,6 +173,9 @@ static void MX_IWDG_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+
+uint8_t csend[] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08};
 
 void UartPrintf(const char *format, ...)
 {
@@ -182,37 +187,10 @@ void UartPrintf(const char *format, ...)
 	size = vsprintf(buffer, format, args);
 	va_end(args);
 
-	HAL_UART_Transmit(&huart4, (uint8_t*)buffer, size, 1000);
+	HAL_UART_Transmit(&huart1, (uint8_t*)buffer, size, 1000);
 }
 
-void debugPrintln(UART_HandleTypeDef *huart, char _out[])
-{
-	char prompt[2] = "> ";
-	HAL_UART_Transmit(huart, (uint8_t *) prompt, 2, 10);
 
-	HAL_UART_Transmit(huart, (uint8_t *) _out, strlen(_out), 10);
-
-	char newline[2] = "\r\n";
-	HAL_UART_Transmit(huart, (uint8_t *) newline, 2, 10);
-}
-
-void send_can(void)
-{
-	can2_txHeader.RTR = CAN_RTR_DATA;
-	can2_txHeader.IDE = CAN_ID_STD;
-	can2_txHeader.TransmitGlobalTime = DISABLE;
-
-	can2_txHeader.StdId = 0x001;
-	can2_txHeader.DLC = 8;
-
-	for(int i=0; i < 8; i++)
-	{
-		can2_TX[i] = 0x00;
-	}
-
-	HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox);
-	HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox);
-}
 
 /* USER CODE END 0 */
 
@@ -223,6 +201,7 @@ void send_can(void)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
 
 	/*
 	 * need this changed/added in the linker script:
@@ -259,9 +238,12 @@ int main(void)
 	  debug_mode.max_illum = 0xdc;
 	  debug_mode.stats = 0;
 
+	  debug_mode.filter_mode = 0;
+
+
 	  button_state.up_next_code = 0x02;
 	  button_state.down_prev_code = 0x03;
-	  //button_state.mute_google = 0x2b;
+	  button_state.mute_google = 0x2b;
 
 	}
 	else
@@ -349,8 +331,7 @@ int main(void)
 
 	// STM32 Cabling and CAN connections to the RCD330 Quadlock Wiring Harness (steering button adaptor)
 	//
-	// On the Blue (SWD) Dual Filter Board:
-	// (Note: this matches the "new" green board)
+	// On the Green (new, serial) Dual Filter Board:
 	//
 	// CAN1 is the RCD330
 	// 	GREEN	CAN High
@@ -360,24 +341,28 @@ int main(void)
 	// 	BLUE	CAN High
 	//	YELLOW	CAN Low
 
-	// PQ Quadlock connector (cheap one)
-	//	Green	CAN High
-	//	Purple	CAN Low
+	// PQ Quadlock connector
+	//	WHITE	CAN High
+	//	ORANGE	CAN Low
 	// 	YELLOW	12V Battery
 	//	BLACK	GND
 
 	// Strategy:
-	//	Cut the CAN High/Low connections between the connectors, midway.
-	//	Connect the appropriate sides to the Blue CAN board
+	//	Cut the CAN High/Low connections between the connectors (WHITE/ORANGE thin wires), midway.
+	//	Connect the appropriate sides to the Green CAN board
 	//	Note: RCD330 side has the lever connector (female pins), the vehicle is the plain connector (male pins).
 	//  Cut the thin YELLOW and BLACK wires (power) that used to go to the original black box.
-	//  Tap the Blue boards power into these and re-connect them all together.
+	//  Tap the Green boards into these and re-connect the all together.
+	//	Note: the idea is that the original black box can be reconnected easily for further debugging.
 
-	// The Blue board will be shrink wrapped instead of using a case.
-	// The USART4 Dupont serial connections (and Gnd) will remain, in case debugging is required.
+	// The Green board will be shrink wrapped instead of using a case.
+	// The USART1 Dupont serial connections (and Gnd) will remain, in case debugging is required.
 	// The FTDI serial adaptor will not be permanently connected.
 
 	// Once power consumption is known, an in-line fuse will be added - just in case!!!
+
+
+
 
 
   /* USER CODE END 1 */
@@ -400,13 +385,47 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  //MX_CAN1_Init();
-  //MX_CAN2_Init();
-  MX_UART4_Init();
-  //MX_IWDG_Init();
+//  MX_CAN1_Init();
+//  MX_CAN2_Init();
+  MX_USART1_UART_Init();
+//  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_UART_Receive_IT (&huart4, serial_mode, 1);
+
+  // note the standard init routines are modifed as follows (due to sleep stop mode):
+  /*
+  MX_GPIO_Init();
+  //MX_CAN1_Init();
+  //MX_CAN2_Init();
+  MX_USART1_UART_Init();
+  //MX_IWDG_Init();
+  */
+  // see after sleep command below for full initialisation
+
+
+  //HAL_IWDG_Refresh(&hiwdg);
+
+  //RetargetInit(&huart1);
+
+  HAL_UART_Receive_IT (&huart1, serial_mode, 1);
+
+
+// using these for EXTI IWDG wakeup (CAN1, CAN2 & USART1)
+//  HAL_GPIO_WritePin(GPIOB, OUT1_Pin,1);
+//  HAL_GPIO_WritePin(GPIOB, OUT2_Pin,0);
+//  HAL_GPIO_WritePin(GPIOB, OUT3_Pin,1);
+//  HAL_GPIO_WritePin(GPIOB, LED_Pin, GPIO_PIN_RESET);
+
+
+#if 0
+  // scanf / printf needs "RetargetInit(&huart1);" after MX_USART1_UART_Init();
+
+  int n = 0;
+
+  printrintf("\r\nYour name: ");
+  scanf("%s", buf);
+  printf("\r\nHello, %s [%f]!\r\n", buf, n);
+#endif
 
   /* USER CODE END 2 */
 
@@ -415,15 +434,7 @@ int main(void)
 
   uint current_tick = 0;
 
-  // v1.2 works on the Blue Board, with only EXTI on Vehicle CAN Rx
-  // Also, IWDG is now only reset by Vehicle CAN Msgs.
-
-  // CONf_S4 is the external LED
-  // CONf_W222 is UART4_Rx
-  // CONf_W166 is UART4_Tx
-  // CONf_BMW is EXTI (Vehicle CAN2 Rx)
-
-  UartPrintf("\r\nDual CAN Filter v1.2 Blu Board (100kb/s) %s [ reset_count %u ]\r\n\r\n", (config_loss) ? "Default Config" : "Existing Config", reset_count);
+  UartPrintf("\r\nDual CAN Filter v1.1 (100kb/s) %s [ reset_count %u ]\r\n\r\n", (config_loss) ? "Default Config" : "Existing Config", reset_count);
 
 
   if(__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST) != RESET)
@@ -438,44 +449,39 @@ int main(void)
   //__HAL_RCC_CLEAR_RESET_FLAGS();
 
 
-  HAL_Delay(5000);
+  HAL_Delay(3000);
 
   UartPrintf("Going into to Sleep Stop Mode\r\n\r\n");
 
-
-#ifdef WATCHDOG
-
   HAL_SuspendTick();
-  HAL_GPIO_WritePin(CONF_S4_LED_GPIO_Port, CONF_S4_LED_Pin, GPIO_PIN_SET);  // turn off
   /* Enter Stop Mode */
-  //DBGMCU->CR = 0;
+  DBGMCU->CR = 0;
   HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
-  HAL_NVIC_DisableIRQ(EXTI15_10_IRQn);
   HAL_ResumeTick();
 
 
   // need to redo all the initialisation
-  //HAL_Init();
   SystemClock_Config();
   MX_GPIO_Init();
   MX_CAN1_Init();
   MX_CAN2_Init();
-  MX_UART4_Init();
-  HAL_UART_Receive_IT (&huart4, serial_mode, 1);
-
-
   MX_IWDG_Init();
+  MX_USART1_UART_Init();
 
-
-
+#ifdef DB_ADC
+  MX_ADC1_Init();
 #endif
 
+  // only for printf/scan
+  //RetargetInit(&huart1);
+
+  HAL_UART_Receive_IT (&huart1, serial_mode, 1);
 
 // using these for EXTI IWDG wakeup (CAN1, CAN2 & USART1)
 //  HAL_GPIO_WritePin(GPIOB, OUT1_Pin,1);
 //  HAL_GPIO_WritePin(GPIOB, OUT2_Pin,0);
 //  HAL_GPIO_WritePin(GPIOB, OUT3_Pin,1);
-//  HAL_GPIO_WritePin(GPIOB, CONF_S4_LED_Pin, GPIO_PIN_RESET);
+//  HAL_GPIO_WritePin(GPIOB, LED_Pin, GPIO_PIN_RESET);
 
 
   // CAN1
@@ -512,19 +518,11 @@ int main(void)
   HAL_CAN_Start(&hcan2);
   HAL_CAN_ActivateNotification(&hcan2,CAN_IT_RX_FIFO1_MSG_PENDING);
 
-#ifdef WATCHDOG
   UartPrintf("EXTI %d - Waking from Sleep Stop Mode\r\n\r\n", (int) EXTI->PR);
-#endif
 
   // don't need to do much here (just print stats), as CAN Filters & USART are interrupt driven
   while(1)
   {
-
-#if 0
-	  UartPrintf("while():%u\r\n", HAL_GetTick());
-	  HAL_Delay(100);
-	  send_can();
-#endif
 
 	  // Get time elapsed
 
@@ -553,17 +551,34 @@ int main(void)
 			  UartPrintf("filter_msg_439_pwr:\t%d\r\n", can_stats.filter_msg_439_pwr);
 			  UartPrintf("filter_msg_635_illum:\t%d\r\n\r\n", can_stats.filter_msg_635_illum);
 
+
+#ifdef DB_ADC
+			  {
+
+				uint16_t readValue;
+				float tCelsius;
+
+			    HAL_ADC_PollForConversion(&hadc1, 100);
+
+			    readValue = HAL_ADC_GetValue(&hadc1);
+
+			    tCelsius = 357.558 - 0.187364 * readValue;
+
+			    UartPrintf("tCelsius:\t\t%d\t%f\r\n\r\n", (int) readValue, tCelsius);
+
+			  }
+#endif
+
+
+
 		  }
 	  }
-
-
 
 
 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
 
   }
   /* USER CODE END 3 */
@@ -583,16 +598,14 @@ void SystemClock_Config(void)
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV5;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-  RCC_OscInitStruct.Prediv1Source = RCC_PREDIV1_SOURCE_PLL2;
+  RCC_OscInitStruct.Prediv1Source = RCC_PREDIV1_SOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
-  RCC_OscInitStruct.PLL2.PLL2State = RCC_PLL2_ON;
-  RCC_OscInitStruct.PLL2.PLL2MUL = RCC_PLL2_MUL8;
-  RCC_OscInitStruct.PLL2.HSEPrediv2Value = RCC_HSE_PREDIV2_DIV5;
+  RCC_OscInitStruct.PLL2.PLL2State = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -634,11 +647,11 @@ static void MX_CAN1_Init(void)
   hcan1.Init.Prescaler = 20;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_11TQ;
-  hcan1.Init.TimeSeg2 = CAN_BS2_6TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_15TQ;
+  hcan1.Init.TimeSeg2 = CAN_BS2_2TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
-  hcan1.Init.AutoWakeUp = DISABLE;
+  hcan1.Init.AutoWakeUp = ENABLE;
   hcan1.Init.AutoRetransmission = DISABLE;
   hcan1.Init.ReceiveFifoLocked = DISABLE;
   hcan1.Init.TransmitFifoPriority = DISABLE;
@@ -671,11 +684,11 @@ static void MX_CAN2_Init(void)
   hcan2.Init.Prescaler = 20;
   hcan2.Init.Mode = CAN_MODE_NORMAL;
   hcan2.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan2.Init.TimeSeg1 = CAN_BS1_11TQ;
-  hcan2.Init.TimeSeg2 = CAN_BS2_6TQ;
+  hcan2.Init.TimeSeg1 = CAN_BS1_15TQ;
+  hcan2.Init.TimeSeg2 = CAN_BS2_2TQ;
   hcan2.Init.TimeTriggeredMode = DISABLE;
   hcan2.Init.AutoBusOff = DISABLE;
-  hcan2.Init.AutoWakeUp = DISABLE;
+  hcan2.Init.AutoWakeUp = ENABLE;
   hcan2.Init.AutoRetransmission = DISABLE;
   hcan2.Init.ReceiveFifoLocked = DISABLE;
   hcan2.Init.TransmitFifoPriority = DISABLE;
@@ -706,7 +719,7 @@ static void MX_IWDG_Init(void)
   /* USER CODE END IWDG_Init 1 */
   hiwdg.Instance = IWDG;
   hiwdg.Init.Prescaler = IWDG_PRESCALER_64;
-  hiwdg.Init.Reload = 4095;
+  hiwdg.Init.Reload = 3125;
   if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
   {
     Error_Handler();
@@ -718,35 +731,35 @@ static void MX_IWDG_Init(void)
 }
 
 /**
-  * @brief UART4 Initialization Function
+  * @brief USART1 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_UART4_Init(void)
+static void MX_USART1_UART_Init(void)
 {
 
-  /* USER CODE BEGIN UART4_Init 0 */
+  /* USER CODE BEGIN USART1_Init 0 */
 
-  /* USER CODE END UART4_Init 0 */
+  /* USER CODE END USART1_Init 0 */
 
-  /* USER CODE BEGIN UART4_Init 1 */
+  /* USER CODE BEGIN USART1_Init 1 */
 
-  /* USER CODE END UART4_Init 1 */
-  huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
-  huart4.Init.WordLength = UART_WORDLENGTH_8B;
-  huart4.Init.StopBits = UART_STOPBITS_1;
-  huart4.Init.Parity = UART_PARITY_NONE;
-  huart4.Init.Mode = UART_MODE_TX_RX;
-  huart4.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart4.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart4) != HAL_OK)
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN UART4_Init 2 */
+  /* USER CODE BEGIN USART1_Init 2 */
 
-  /* USER CODE END UART4_Init 2 */
+  /* USER CODE END USART1_Init 2 */
 
 }
 
@@ -762,24 +775,34 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(CONF_S4_LED_GPIO_Port, CONF_S4_LED_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : CONF_BMW_EXTI_Pin */
-  GPIO_InitStruct.Pin = CONF_BMW_EXTI_Pin;
+  /*Configure GPIO pin : PA0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PB13 PB15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_15;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB14 */
+  GPIO_InitStruct.Pin = GPIO_PIN_14;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(CONF_BMW_EXTI_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : CONF_S4_LED_Pin */
-  GPIO_InitStruct.Pin = CONF_S4_LED_Pin;
+  /*Configure GPIO pin : LED_Pin */
+  GPIO_InitStruct.Pin = LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(CONF_S4_LED_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(LED_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
@@ -788,6 +811,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
 
 /*
  * CAN1 is connected to the RCD330 CAN bus (used to be connected to the vehicle)
@@ -827,14 +851,12 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 
 
 	if(debug_mode.enable_led)
-		HAL_GPIO_TogglePin(CONF_S4_LED_GPIO_Port, CONF_S4_LED_Pin);
+		HAL_GPIO_TogglePin(GPIOB, LED_Pin);
 
 	can_stats.can1_rx_count++;
 	can_stats.can1_last_rx_tick = HAL_GetTick();
 
-#ifdef WATCHDOG
-	//HAL_IWDG_Refresh(&hiwdg);
-#endif
+	HAL_IWDG_Refresh(&hiwdg);
 
 	if(debug_mode.can1)
 	{
@@ -853,10 +875,54 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 		}
 	}
 
-	// default
-	if(HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox) != HAL_OK)
-		UartPrintf("CAN2 Tx Failed\r\n");
-	can_stats.can2_tx_count++;
+
+	// Power Down ???  These messages seem to be from the RCD330 to the car
+	// added to RCD330 => vehicle side...
+	if(can2_txHeader.StdId == 0x436 && can2_txHeader.DLC == 8 && can2_TX[0] == 0x01 && can2_TX[5] == 0x06)
+	{
+		if(debug_mode.filters)
+		{
+			UartPrintf("CAN1 Filter [%8u]:\t436 [8] 01 XX XX XX XX 06 XX XX\t==>\t436 [6] 01 XX XX XX XX 06\r\n", can_stats.can1_last_rx_tick);
+			UartPrintf("                                                        ==>\t439 [6] 01 XX XX XX XX 06\r\n");
+		}
+
+		can_stats.filter_msg_436_pwr++;
+
+		// reduce length
+		can2_txHeader.DLC = (uint32_t) 6;
+
+		// send 1st 0x436 message
+		HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox);
+		can_stats.can2_tx_count++;
+
+		// send 2nd 0x439 message
+		can2_txHeader.StdId = (uint32_t) 0x439;
+		HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox);
+		can_stats.can2_tx_count++;
+	}
+	else
+	if(can2_txHeader.StdId == 0x439 && can2_txHeader.DLC == 8 && can2_TX[0] == 0x01 && can2_TX[5] == 0x06)
+	{
+		if(debug_mode.filters)
+		{
+			UartPrintf("CAN1 Filter [%8u]:\t439 [8] 01 XX XX XX XX 06 XX XX\t==>\t439 [6] 01 XX XX XX XX 06\r\n", can_stats.can1_last_rx_tick);
+		}
+
+		can_stats.filter_msg_439_pwr++;
+
+		// reduce length
+		can2_txHeader.DLC = (uint32_t) 6;
+
+		// send modified message
+		HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox);
+		can_stats.can2_tx_count++;
+	}
+	else
+	{
+		// default
+		HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox);
+		can_stats.can2_tx_count++;
+	}
 }
 
 
@@ -880,13 +946,12 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 
 
 	// copy over useful stuff for tx-ing
-	// modify as appropriate below...
 	__disable_irq();
 
 	can1_txHeader.StdId = can2_rxHeader.StdId;
 	can1_txHeader.DLC = can2_rxHeader.DLC;
 
-	for(int i=0; i < can2_rxHeader.DLC; i++)
+	for(int i=0; i < 8; i++)
 	{
 		can1_TX[i] = can2_RX[i];
 	}
@@ -899,7 +964,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 
 
 	if(debug_mode.enable_led)
-		HAL_GPIO_TogglePin(CONF_S4_LED_GPIO_Port, CONF_S4_LED_Pin);
+		HAL_GPIO_TogglePin(GPIOB, LED_Pin);
 
 	can_stats.can2_rx_count++;
 	can_stats.can2_last_rx_tick = curr_tick;
@@ -909,7 +974,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 
 		if(!(debug_mode.filter_id_en && (debug_mode.filter_id_num != can1_txHeader.StdId)))
 		{
-				UartPrintf("%8u [%8u] CAN2 Rx: 0x%.3x ", can_stats.can2_last_rx_tick, can_stats.can2_rx_count, (int) can1_txHeader.StdId);
+				UartPrintf("%8u [%8u] can2 Rx: 0x%.3x ", can_stats.can2_last_rx_tick, can_stats.can2_rx_count, (int) can1_txHeader.StdId);
 				UartPrintf("[%d] ", (int) can1_txHeader.DLC);
 
 				int i;
@@ -966,14 +1031,11 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 	// IWDG
 	if(can1_txHeader.StdId == 0x2c3 || can1_txHeader.StdId == 0x575)
 	{
-#ifdef WATCHDOG
 		HAL_IWDG_Refresh(&hiwdg);
-#endif
 
 		can_stats.iwdg_msg++;
 
-		if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-			UartPrintf("CAN1 Tx Failed - IWDG\r\n");
+		HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox);
 		can_stats.can1_tx_count++;
 	}
 	else
@@ -994,11 +1056,12 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 		 * 0x28 ok
 		 */
 
-		int tx_msg = 1;
+
 
 		// presumably button active msgs are sent every 100ms while pressed
 		// as soon as the clear msgs 0x00 arrives, check the time from 1st active msg.
 
+#ifdef DB_CLEAR
 		if(can1_TX[0] == 0x00)	// clear
 		{
 			// all buttons off, so check for a long press on useful buttons
@@ -1011,8 +1074,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 			// in future, perhaps we can block the short msgs in the filter and send them manually via the short press detection in this routine...
 
 
-			// Mute (Star)
-			// Short Press Mute, Long press "Google Assitant"
+			// mute ?
 			uint dur = curr_tick - button_time.mute;
 
 			// check for a long press (> 1sec)
@@ -1021,53 +1083,30 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 				if(dur > 1000)
 				{
 					UartPrintf("CAN2 Mute Long press\t[%u]\r\n", dur);
-					can1_TX[0] = (uint8_t) 0x2a;
 				}
 				else
 				{
 					UartPrintf("CAN2 Mute Short press\t[%u]\r\n", dur);
-					can1_TX[0] = (uint8_t) 0x2b;
 				}
-
-				// force to  DLC 8
-				can1_txHeader.DLC = (uint32_t) 8;
-
-				// clear all bytes but first
-				for(int i = 1; i < 8; i++)
-					can1_TX[i] = (uint8_t) 0x00;
-
-				// send one message and hope for the best...
-				// might need a couple...?
-				if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-					UartPrintf("CAN1 Tx Failed - Mute\r\n");
-
-				// set back to clear for the default send msg below...
-				can1_TX[0] = (uint8_t) 0x00;
-
 			}
 			button_time.mute = 0;
 
 
-			// menu button clear
-			// swap between MFD & RCD330 Mode (default) using short/long press of menu button
+			// menu ?
 			dur = curr_tick - button_time.menu;
 
 			if(button_time.menu > 0)
 			{
 				if(dur > 1000)
 				{
-					UartPrintf("CAN2 Menu Long press\t[%u]\r\n", dur);
+					if(++debug_mode.filter_mode > 2)	// cycle through available modes on menu long press
+						debug_mode.filter_mode = 0;
 
-					button_state.up_next_code = 0x02;
-					button_state.down_prev_code = 0x03;
-					//button_state.mute_google = 0x2b;
+					UartPrintf("CAN2 Menu Long press\tfilter_mode: %u\t[%u]\r\n", debug_mode.filter_mode, dur);
 				}
 				else
 				{
-					UartPrintf("CAN2 Menu Short press\t[%u]\r\n", dur);
-					button_state.up_next_code = 0x22;
-					button_state.down_prev_code = 0x23;
-					//button_state.mute_google = 0x2a;
+					UartPrintf("CAN2 Menu Short press\tfilter_mode: %u\t[%u]\r\n", debug_mode.filter_mode, dur);
 				}
 			}
 			button_time.menu = 0;
@@ -1105,6 +1144,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 			button_time.ok = 0;
 		}
 		else  // below here are the individual button filters
+#endif
 		if(can1_TX[0] == 0x1d || can1_TX[0] == 0x1e) // Some unknown buttons => Phone
 		{
 			// this is code from the Chinese can filter, might not be applicable to the Golf Mk5?
@@ -1174,7 +1214,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 				button_time.mute = curr_tick;
 			}
 
-#if 0
 			can1_TX[0] = (uint8_t) button_state.mute_google;
 			can_stats.filter_msg_mute++;
 
@@ -1186,11 +1225,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 			{
 				UartPrintf("CAN2 Filter [%8u]:\t5c1 [X] 2b XX XX XX XX XX XX XX\t==>\t5c1 [8] %02x 00 00 00 00 00 00 00\r\n", can_stats.can2_last_rx_tick, can1_TX[0]);
 			}
-#else
-			// don't send mute immediately
-			// check the clear msgs above and send based on short/long press...
-			tx_msg = 0;
-#endif
 		}
 #if 0
 		else
@@ -1224,13 +1258,11 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 				button_time.menu = curr_tick;
 			}
 
-#if 0
 			button_state.up_next_code = 0x22;
 			button_state.down_prev_code = 0x23;
 			button_state.mute_google = 0x2a;
 			//button_state.up_vol_seek = 0x04;
 			//button_state.down_vol_seek = 0x05;
-#endif
 
 			can_stats.filter_msg_menu++;
 			can1_txHeader.DLC = (uint32_t) 8;
@@ -1259,13 +1291,11 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 				button_time.ok = curr_tick;
 			}
 
-#if 0
 			button_state.up_next_code = 0x02;
 			button_state.down_prev_code = 0x03;
 			button_state.mute_google = 0x2b;
 			//button_state.up_vol_seek = 0x06;
 			//button_state.down_vol_seek = 0x07;
-#endif
 
 			can_stats.filter_msg_ok++;
 
@@ -1293,10 +1323,11 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 			can1_TX[i] = (uint8_t) 0x00;
 
 		// send modified msg
-		if(tx_msg && HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-			UartPrintf("CAN1 Tx Failed - 0x5c1\r\n");
+		HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox);
 		can_stats.can1_tx_count++;
 	}
+
+#ifdef DB_POWER_CAN2
 	else
 	// Power Down ???  These messages seem to be from the RCD330 to the car
 	if(can1_txHeader.StdId == 0x436 && can1_txHeader.DLC == 8 && can1_TX[0] == 0x01 && can1_TX[5] == 0x06)
@@ -1313,14 +1344,12 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 		can1_txHeader.DLC = (uint32_t) 6;
 
 		// send 1st 0x436 message
-		if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-			UartPrintf("CAN1 Tx Failed - 0x436\r\n");
+		HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox);
 		can_stats.can1_tx_count++;
 
 		// send 2nd 0x439 message
 		can1_txHeader.StdId = (uint32_t) 0x439;
-		if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-			UartPrintf("CAN1 Tx Failed - 0x439\r\n");
+		HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox);
 		can_stats.can1_tx_count++;
 	}
 	else
@@ -1337,10 +1366,11 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 		can1_txHeader.DLC = (uint32_t) 6;
 
 		// send modified message
-		if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-			UartPrintf("CAN1 Tx Failed - 0x439 2\r\n");
+		HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox);
 		can_stats.can1_tx_count++;
 	}
+#endif
+
 	else
 	// Illumination
 	if(can1_txHeader.StdId == 0x635 && can1_txHeader.DLC == 3 && can1_TX[0] == 0x00 && can1_TX[1] == 0x00 && can1_TX[2] == 0x00)
@@ -1358,15 +1388,13 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 		can_stats.filter_msg_635_illum++;
 
 		// send modified msg
-		if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-			UartPrintf("CAN1 Tx Failed - 0x635\r\n");
+		HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox);
 		can_stats.can1_tx_count++;
 	}
 	else
 	{
 		// default is to send remaining msgs unchanged
-		if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-			UartPrintf("CAN1 Tx Failed - default\r\n");
+		HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox);
 		can_stats.can1_tx_count++;
 	}
 
@@ -1454,11 +1482,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     	break;
 
     }
-    HAL_UART_Receive_IT(&huart4, serial_mode, 1);
+    HAL_UART_Receive_IT(&huart1, serial_mode, 1);
 
 
 }
-
 
 /* USER CODE END 4 */
 
@@ -1470,11 +1497,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-	  UartPrintf("Error_Handler() Invoked => NVIC_SystemReset\r\n");
-
-	  NVIC_SystemReset();
-
-	  __disable_irq();
+  __disable_irq();
   while (1)
   {
   }
