@@ -21,7 +21,7 @@ and then on to these pages:<BR>
 
 These STM32 boards are readily available for under AU$30<BR>
   https://www.aliexpress.com/item/4000238881021.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn<BR>
-![Green CAN Filter](pics/Dual_CAN_Filter_small.png)
+![Green CAN Filter](pics/Dual_CAN_Filter_blue_small.png)
 	
 Most of the green versions are newer than in the articles above, using different GPIO ports & serial pins on the back.
 
