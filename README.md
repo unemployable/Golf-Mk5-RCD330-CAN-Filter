@@ -1,4 +1,4 @@
-# Golf Mk5 RCD330 CAN Filter #
+# Golf Mk5 RCD330 CAN Filter - Blue SWD Version#
 Allow an RCD330 Head Unit to work in a Golf Mk5 (fixes steering wheel buttons, screen brightness and adds a Google Assistant button)
 
 This project is based on great ideas and information found in this forum:<BR>
