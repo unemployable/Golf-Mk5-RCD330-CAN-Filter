@@ -62,8 +62,15 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define LED_Pin GPIO_PIN_9
-#define LED_GPIO_Port GPIOB
+#define CONF_BMW_EXTI_Pin GPIO_PIN_15
+#define CONF_BMW_EXTI_GPIO_Port GPIOA
+#define CONF_BMW_EXTI_EXTI_IRQn EXTI15_10_IRQn
+#define UART4_TX_CONF_W166_Pin GPIO_PIN_10
+#define UART4_TX_CONF_W166_GPIO_Port GPIOC
+#define UART4_RX_CONF_W222_Pin GPIO_PIN_11
+#define UART4_RX_CONF_W222_GPIO_Port GPIOC
+#define CONF_S4_LED_Pin GPIO_PIN_12
+#define CONF_S4_LED_GPIO_Port GPIOC
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
