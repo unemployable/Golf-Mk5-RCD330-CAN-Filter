@@ -6,7 +6,7 @@ I've found at least two versions, with only minor differences in the code.
 
 Included files are an original dumped binary, Ghidra zip file (gzf) & an export of the decompiled 'C' code.
   
-It makes use of Thomas Roth's excellent SVD-Loader scripts.
+It makes use of Thomas Roth's excellent Ghidra SVD-Loader scripts.
 
 This is my first, amateur attempt to decompile an STM32 binary.<BR>
 I have tried to include lots of comments to assist with my understanding of the code.
