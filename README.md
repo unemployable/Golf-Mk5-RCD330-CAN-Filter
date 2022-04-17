@@ -67,18 +67,18 @@ My car only has an MFD (Midline, Multi Function Display) in the instrument clust
 ## Implementation ##
 
 Arduino IDE does not support the STM32F105/107 used on these blue/green filter boards.<BR>
-I ended up using STM32CubeIDE, but it only supports programming via SWD/JTAG, not serial.<BR>
+I ended up using STM32CubeIDE, which only supports programming via SWD/JTAG, not serial.<BR>
 This suits the blue board, as SWD is available via a pin header.<BR>
-This made falshing the board much easier than the "new" green version.
+This made flashing this board much easier than the green version.
 	
-The blue board also has 4 "conf" solder pads available, connected to GPIO PA15 & PC10-12.<BR>
-UART4 was configured on PC10&11, a LED was connected to PC12 & PA15 was used as an EXTI input (connected to Vehicle CAN2 Rx).<BR>
+The blue board also has 4 "conf" solder pads available, connected to GPIO: PA15 & PC10-12.<BR>
+UART4 was configured on PC10&11, a LED was connected to PC12 & PA15 was used as an EXTI input.<BR>
 An FTDI adapter was then attached to UART4 during debugging.
 
 I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
 Aprarently it should work, but the HAL libraries might be preventing it from working.<BR>
-I cheated by configuring the 3 spare *"config"* inputs and soldering links in parallel with each of the Rx pins (CAN1, CAN2 & USART1).<BR>
-These extra GPIO pins were then all configured as separate EXTI inputs (rising/falling) - seems to work fine...
+The PA15 EXTI link above, is connected to CAN2 Rx and used as a work around.<BR>
+So in this blue board version, only the Vehicle CAN is able to wake the STM32 from sleep/stop state.
 
 I have also added an alternate function on the Mute (Star) button to send the Google Assistant (Siri) message in *MFD mode*.<BR>
 This was done because the *"Hey Google"* voice detection on the RCD330 is a bit flaky at times.
