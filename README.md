@@ -83,8 +83,8 @@ So in this blue board version, only the Vehicle CAN is able to wake the STM32 fr
 In this blue board version, I am starting to experiment with detecting a button *"long press"*.<BR>
 Currently, a *long press* of the Menu button switches it to *RCD330 mode*, (short press for *MFD mode*).<BR>
 Also, a *long press* of the Mute/Star button will activate *Google Assistant/Siri*.<BR>
-Note: the *Phone* button is already detected by the RCD330 as "dial last number*.<BR>
-This leaves *long press* of the Ok button still available.
+Note: a *long press* of the *Phone* button is already detected by the RCD330 as "dial last number*.<BR>
+This leaves *long press* of the Ok button still available, not sure doing this on Vol or Up/Dn is a good idea...?
 	
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
 0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
