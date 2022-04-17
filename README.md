@@ -33,7 +33,7 @@ Each CAN bus interface on the blue board will attach to its own plug (i.e. separ
 12V & GND (yellow/black) need to be tapped to power the green board.<BR>
 
 It is also necessary to make sure the solder links for the two 120 ohm termination resistors are not connected.<BR>
-Note: during testing, I had to short these out in order to work with a Dual CAN tester using # CANPro Analyzer # s/w.
+Note: during testing, I had to short these out in order to work with a Dual CAN tester using <B>CANPro Analyzer</B> s/w.
 
 Now any CAN message from the car will need to go through the green CAN filter to get to the radio (and vice versa).
 
