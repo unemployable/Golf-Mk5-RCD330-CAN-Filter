@@ -80,9 +80,12 @@ Aprarently it should work, but the HAL libraries might be preventing it from wor
 The PA15 EXTI link above, is connected to CAN2 Rx as a work around.<BR>
 So in this blue board version, only the Vehicle CAN is able to wake the STM32 from sleep/stop state.
 
-I have also added an alternate function on the Mute (Star) button to send the Google Assistant (Siri) message in *MFD mode*.<BR>
-This was done because the *"Hey Google"* voice detection on the RCD330 is a bit flaky at times.
-
+In this blue board version, I am starting to experiment with detecting a steering wheel button *"long press"*.
+Currently, a *long press* of the Menu button switched to *RCD330 mode*, (short press for *MFD mode*).<BR>
+Also, a *long press* of the Mute/Star button will activate *Google Assistant/Siri*.<BR>
+Note: the *Phone* button is already detected by the RCD330 as "dial last number*.<BR>
+This leaves *long press* of the Ok button still available.
+	
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
 0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
 0x635 [3] 0x00 0x00 <B>0xfd</B><BR>
