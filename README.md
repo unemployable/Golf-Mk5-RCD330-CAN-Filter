@@ -77,7 +77,7 @@ An FTDI adapter was then attached to UART4 during debugging.
 
 I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
 Aprarently it should work, but the HAL libraries might be preventing it from working.<BR>
-The PA15 EXTI link above, is connected to CAN2 Rx and used as a work around.<BR>
+The PA15 EXTI link above, is connected to CAN2 Rx as a work around.<BR>
 So in this blue board version, only the Vehicle CAN is able to wake the STM32 from sleep/stop state.
 
 I have also added an alternate function on the Mute (Star) button to send the Google Assistant (Siri) message in *MFD mode*.<BR>
