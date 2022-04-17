@@ -35,7 +35,7 @@ Each CAN bus interface on the blue board will attach to its own plug (i.e. separ
 It is also necessary to make sure the solder links for the two 120 ohm termination resistors are not connected.<BR>
 Note: during testing, I had to short these out in order to work with a Dual CAN tester using <B>CANPro Analyzer</B> s/w.
 
-Now any CAN message from the car will need to go through the green CAN filter to get to the radio (and vice versa).
+Now any CAN message from the car will need to go through the blue CAN filter to get to the radio (and vice versa).
 
 
 ## Investigation ##
@@ -66,18 +66,14 @@ My car only has an MFD (Midline, Multi Function Display) in the instrument clust
 
 ## Implementation ##
 
-I chose the "new" green filter board as it had a couple of features I thought might help during development.<BR>
-There is an on board LED (toggle on receiving CAN messages) and it uses serial (for simple control/debug messages) rather than SWD.  Unfortunately this made programming it a little more difficult.
-
 Arduino IDE does not support the STM32F105/107 used on these blue/green filter boards.<BR>
 I ended up using STM32CubeIDE, but it only supports programming via SWD/JTAG, not serial.<BR>
-Flashing was done separately using STM32CubeProgrammer in UART mode.<BR>
-
-This meant the device had to be manually put into bootloader mode.<BR>
-I glued & soldered a couple of micro push button switches to the board for NRST & BOOT0.<BR>
-BOOT0 is available on one of the pads on the back of the board.  NRST is connected to a cap on the top. 
-
-FTDI connections were also attached to USART1 Tx, Rx & Gnd pads on the underside of the board.<BR>
+This suits the blue board, as SWD is available via a pin header.<BR>
+This made falshing the board much easier than the "new" green version.
+	
+The blue board also has 4 "conf" solder pads available, connected to GPIO PA15 & PC10-12.<BR>
+UART4 was configured on PC10&11, a LED was connected to PC12 & PA15 was used as an EXTI input (connected to Vehicle CAN2 Rx).<BR>
+An FTDI adapter was then attached to UART4 during debugging.
 
 I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
 Aprarently it should work, but the HAL libraries might be preventing it from working.<BR>
