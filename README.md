@@ -91,8 +91,7 @@ The brightness message (lights off) was also detected and modified (as discussed
 0x635 [3] 0x00 0x00 <B>0xfd</B><BR>
 
 I found 0xfe & 0xff actually made the display dim, 0xfd seems to be the max.<BR>
-It is now so bright, I am running the RCD330 in its "darkest" screen setting.<BR>
-I will probably change it to 0xdc in the next version.
+As 0xfd was fairly bright, this version changes it to 0xdc.
 
 All other 0x635 messages are sent through unchanged, so the variable dash back light adjustment still works on the RCD330:<BR>
 0x635 [3] <B>0xNN</B> 0x00 0x00 (where <B>0xNN</B> varies from 0x1d to 0x62)<BR>
@@ -110,12 +109,8 @@ Vehicle time & temperature on the RCD330 also works (i.e. when not using Android
 
 ## Future Work ##
 
-If the prototype proves to be reliable, I am considering some enhancements:
+If this 2nd prototype proves to be reliable, I am considering some further enhancements:
 
-* Port s/w to the Blue CAN Filter (SWD), just to make sure it can also work.
-* Reduce the brightness a bit (try 0xdc value).
-* Move the Ok button *RCD330 default mode* to a long press of the Menu button.
-* Move the Google Assitant button from *MFD mode* to a long press of Mute/Star.
 * In *RCD330 mode*: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons.
 * Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption.<BR>
