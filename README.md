@@ -97,9 +97,9 @@ All other 0x635 messages are sent through unchanged, so the variable dash back l
 I have also implemented the 0x436 & 0x439 filtering, but it does not seem to be invoked in my car.
 
 Power consumption is not that great, around 50ma running and 20ma in sleep/stop mode.<BR>
-The CAN drivers on these boards (VP1050?) seem to have pin 8 (S) permanently connected to Gnd.<BR>
-If this is a clone of the TI SN65HVD1050, it forces "high-speed mode" and has the highest consumption (typ. 50mA).<BR>
-Tying this to Vcc should enable "listen-only silent mode" (typ. 6mA), which would be useful combined with STM32 sleep/stop mode.<BR>
+The CAN drivers on these boards (MCP2551) seem to have pin 8 (Rs) permanently connected to Gnd.<BR>
+This forces *"High-Speed mode"* and has the highest consumption (max. 75mA).<BR>
+Tying this to Vcc should enable *"Standby or SLEEP mode"* (typ. under 1mA), which would be useful combined with STM32 sleep/stop mode.<BR>
 As the CAN Driver runs on 5V and the STM32 on 3.3V, controlling the "S" pin directly from GPIO might not work.
 	
 Vehicle time & temperature on the RCD330 also works (i.e. when not using Android Auto / CarPlay).
@@ -115,5 +115,5 @@ If the prototype proves to be reliable, I am considering some enhancements:
 * Move the Google Assitant button from *MFD mode* to a long press of Mute/Star.
 * In *RCD330 mode*: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons.
-* Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption (or perahps replace with TJA1042).<BR>
-  Would need to sacrifice the USART1 EXTI *"conf"* input (as GPIO ouput to the *"S"* pin).
+* Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption.<BR>
+  Would need to sacrifice the LED *"conf"* input (as GPIO ouput to the *"S"* pin).
