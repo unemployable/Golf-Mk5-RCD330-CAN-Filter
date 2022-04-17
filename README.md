@@ -31,7 +31,8 @@ Just remove the existing CAN module and cut the CAN bus wires between the plugs.
 Attach the blue filter board in-line between the plugs using those wires.<BR>
 Each CAN bus interface on the blue board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
 12V & GND (yellow/black) need to be tapped to power the green board.<BR>
-
+![Quadlock Pins](pics/QUADLOCK.jpg)
+	
 It is also necessary to make sure the solder links for the two 120 ohm termination resistors are not connected.<BR>
 Note: during testing, I had to short these out in order to work with a Dual CAN tester using <B>CANPro Analyzer</B> s/w.
 
