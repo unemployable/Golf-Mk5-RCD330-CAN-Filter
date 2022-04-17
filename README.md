@@ -35,7 +35,7 @@ I've combined a "new" green version with one of these common RCD330-PQ adapter c
 Just remove the existing CAN module and cut the white/orange CAN bus wires between the plugs.<BR>
 Attach the green filter board in-line between the plugs using those white/orange wires.<BR>
 Each CAN bus interface on the green board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
-12V & GND (yellow/black) need to be tapped to power the green board.<BR>
+12V BAT & GND (yellow/black) need to be tapped to power the green board.<BR>
 ![Quadlock PQ Connector](pics/QUADLOCK_small.png)
 	
 It is also necessary to remove the two 120 ohm termination resistors on the the green board.
