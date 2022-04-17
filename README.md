@@ -124,5 +124,5 @@ If the prototype proves to be reliable, I am considering some enhancements:
 * Move the Google Assitant button from *MFD mode* to a long press of Mute/Star.
 * In *RCD330 mode*: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons.
-* Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption (or perahps replace with TJA1042).<BR>
+* Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption (or perhaps replace with TJA1042).<BR>
   Would need to sacrifice the USART1 EXTI *"conf"* input (as GPIO ouput to the *"S"* pin).
