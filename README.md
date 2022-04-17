@@ -23,7 +23,7 @@ These STM32 boards are readily available for under AU$30<BR>
   https://www.aliexpress.com/item/4000238881021.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn<BR>
 ![Green CAN Filter](pics/Dual_CAN_Filter_blue_small.png)
 	
-I've combined the blue version with a common RCD330-PQ adapter cables (although a cheaper version):<BR>
+I've combined the blue version with a common RCD330-PQ adapter cables (although one with cheaper plugs & different coloured wires):<BR>
   https://www.aliexpress.com/item/1005003052063834.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
 ![RCD330-PQ-Adapter](pics/RCD330_CAN_Adapter_small.png)
 	
