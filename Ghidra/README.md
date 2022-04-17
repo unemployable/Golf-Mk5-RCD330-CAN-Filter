@@ -18,5 +18,5 @@ New CAN msgs will wake it up via an EXTI interrupt. See function *FUN_MAIN_LOOP_
 It is far easier to navigate through the code when loaded into Ghidra via the gzf file.<BR>
 The 'C' code is mostly structure definitions of the peripherals, but still helpful if you don't want to install Ghidra.
 
-Note that these devices are not really CAN filters.  The sit across the CAN bus listening for certain messages and then sending additional modified versions.
+Note that these devices are not really CAN filters.  They sit across the CAN bus listening for certain messages and then sending additional modified versions.
   
