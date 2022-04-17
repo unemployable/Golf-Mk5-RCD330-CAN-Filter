@@ -88,7 +88,7 @@ This leaves *long press* of the Ok button still available (not sure doing this o
 	
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
 0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
-0x635 [3] 0x00 0x00 <B>0xfd</B><BR>
+0x635 [3] 0x00 0x00 <B>0xdc</B><BR>
 
 I found 0xfe & 0xff actually made the display dim, 0xfd seems to be the max.<BR>
 As 0xfd was fairly bright, this version changes it to 0xdc.
