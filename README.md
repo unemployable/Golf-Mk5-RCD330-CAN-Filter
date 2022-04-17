@@ -66,7 +66,7 @@ Pressing Ok (*RCD330 mode*), both the MFD and RCD330 are changed (i.e. it sends 
 Unfortunately, there is no way to stop the MFD being updated by using a CAN bus filter at the radio.
 
 My car only has an MFD (Midline, Multi Function Display) in the instrument cluster which does not use the Menu button, making it available for other uses.  However, using the Ok button to switch modes is annoying, as it will still impact the MFD on several screens.<BR>
-
+![Golf Mk5 MFD](pics/MFD.png)
 
 ## Implementation ##
 
