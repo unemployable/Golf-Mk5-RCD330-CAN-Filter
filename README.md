@@ -29,7 +29,7 @@ I've combined the blue version with a common RCD330-PQ adapter cable (although o
 	
 Just remove the existing CAN module and cut the CAN bus wires between the plugs.<BR>
 Attach the blue filter board in-line between the plugs using those wires (matching CAN high/low connections).<BR>
-Each CAN bus interface on the blue board will attach to its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
+Each CAN bus interface on the blue board will then have its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
 12V & GND (yellow/black) need to be tapped to power the green board.<BR>
 ![Quadlock Pins](pics/QUADLOCK_small.png)
 	
