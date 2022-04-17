@@ -71,7 +71,7 @@ I ended up using STM32CubeIDE, which only supports programming via SWD/JTAG, not
 This suits the blue board, as SWD is available via a pin header.<BR>
 This made flashing this board much easier than the green version.
 	
-The blue board also has 4 "conf" solder pads available, connected to GPIO: PA15 & PC10-12.<BR>
+The blue board also has 4 *"conf"* solder pads available, connected to GPIO: PA15 & PC10-12.<BR>
 UART4 was configured on PC10&11, a LED was connected to PC12 & PA15 was used as an EXTI input.<BR>
 An FTDI adapter was then attached to UART4 during debugging.
 
