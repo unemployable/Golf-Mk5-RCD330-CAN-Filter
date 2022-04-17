@@ -116,4 +116,4 @@ If this 2nd prototype proves to be reliable, I am considering some further enhan
 * In *RCD330 mode*: after sending an Up/Down message, immediately send the opposite message (to try and *hide*/work around MFD changes).
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons.
 * Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption.<BR>
-  Would need to sacrifice the LED *"conf"* input (as GPIO ouput to the *"S"* pin).
+  Would need to sacrifice the LED *"conf"* connection (use as a GPIO ouput to the *"S"* pin).
