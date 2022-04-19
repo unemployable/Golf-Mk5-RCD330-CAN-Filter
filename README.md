@@ -36,9 +36,9 @@ Each CAN bus interface on the blue board will then have its own plug (i.e. separ
 On the Blue (SWD) Dual Filter Board:
 (Note: this matches the "new" green board)
 
-CAN1 is the RCD330
- 	GREEN	CAN High
-	PURPLE	CAN Low
+<B>CAN1 is the RCD330</B><BR>
+* GREEN	CAN High
+* PURPLE	CAN Low
 
 CAN2 is the Vehicle
 	BLUE	CAN High
