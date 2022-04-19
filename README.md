@@ -100,11 +100,13 @@ The PA15 EXTI link above, is connected to CAN2 Rx as a work around.<BR>
 So in this blue board version, only the vehicle CAN is able to wake the STM32 from sleep/stop state.<BR>
 I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.
 
-Also in this version, I am starting to experiment with detecting a button *"long press"*.<BR>
+In this version, I am starting to experiment with detecting a button *"long press"*.<BR>
 Currently, a *long press* of the Menu button switches it to *RCD330 mode*, (short press for *MFD mode*).<BR>
 Also, a *long press* of the Mute/Star button will activate *Google Assistant/Siri*.<BR>
 Note: a *long press* of the *Phone* button is already detected by the RCD330 as "dial last number*.<BR>
 This leaves *long press* of the Ok button still available (not sure doing this on Up/Dn would be a good idea...?)
+	
+In *RCD330 mode*, this version is also sending brief, opposite messages back to the MFD for the Up/Down buttons.
 	
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
 0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
