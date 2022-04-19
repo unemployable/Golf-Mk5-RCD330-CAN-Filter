@@ -190,17 +190,6 @@ void UartPrintf(const char *format, ...)
 	HAL_UART_Transmit(&huart4, (uint8_t*)buffer, size, 1000);
 }
 
-void debugPrintln(UART_HandleTypeDef *huart, char _out[])
-{
-	char prompt[2] = "> ";
-	HAL_UART_Transmit(huart, (uint8_t *) prompt, 2, 10);
-
-	HAL_UART_Transmit(huart, (uint8_t *) _out, strlen(_out), 10);
-
-	char newline[2] = "\r\n";
-	HAL_UART_Transmit(huart, (uint8_t *) newline, 2, 10);
-}
-
 void send_can(void)
 {
 	can2_txHeader.RTR = CAN_RTR_DATA;
