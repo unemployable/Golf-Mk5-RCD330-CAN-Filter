@@ -97,7 +97,7 @@ An FTDI adapter was then attached to UART4 during debugging.
 I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
 Apparently it should work, but the HAL libraries might be preventing it from working.<BR>
 The PA15 EXTI link above, is connected to CAN2 Rx as a work around.<BR>
-So in this blue board version, only the vehicle CAN is able to wake the STM32 from sleep/stop state.
+So in this blue board version, only the vehicle CAN is able to wake the STM32 from sleep/stop state.<BR>
 I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.
 
 Also in this version, I am starting to experiment with detecting a button *"long press"*.<BR>
