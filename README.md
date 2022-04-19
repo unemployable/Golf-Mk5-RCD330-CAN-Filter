@@ -32,6 +32,23 @@ Attach the blue filter board in-line between the plugs using those wires (matchi
 Each CAN bus interface on the blue board will then have its own plug (i.e. separating RCD330 CAN & Vehicle CAN).<BR>
 12V BAT & GND (yellow/black) need to be tapped to power the blue board.<BR>
 ![Quadlock Pins](pics/QUADLOCK_small.png)
+
+On the Blue (SWD) Dual Filter Board:
+(Note: this matches the "new" green board)
+
+CAN1 is the RCD330
+ 	GREEN	CAN High
+	PURPLE	CAN Low
+
+CAN2 is the Vehicle
+	BLUE	CAN High
+	YELLOW	CAN Low
+
+PQ Quadlock connector (cheap one)
+	Green	CAN High
+	Purple	CAN Low
+ 	YELLOW	12V Battery
+	BLACK	GND
 	
 It is also necessary to make sure the solder links for the two 120 ohm termination resistors are not connected.<BR>
 Note: during testing, I had to short these out in order to work with a Dual CAN tester using <B>CANPro Analyzer</B> s/w.
