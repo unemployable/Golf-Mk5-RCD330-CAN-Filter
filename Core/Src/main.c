@@ -93,7 +93,12 @@ struct
 	uint menu;
 	uint phone;
 	uint ok;
-} button_time = { 0, 0, 0, 0 };
+
+	// needed for the "MFD undo" code...
+	uint up;
+	uint down;
+
+} button_time = { 0, 0, 0, 0, 0, 0 };
 
 
 __attribute__((section(".noinit"))) volatile struct
@@ -423,7 +428,7 @@ int main(void)
   // CONf_W166 is UART4_Tx
   // CONf_BMW is EXTI (Vehicle CAN2 Rx)
 
-  UartPrintf("\r\nDual CAN Filter v1.2 Blu Board (100kb/s) %s [ reset_count %u ]\r\n\r\n", (config_loss) ? "Default Config" : "Existing Config", reset_count);
+  UartPrintf("\r\nDual CAN Filter v1.2 Blue Board (100kb/s) %s [ reset_count %u ]\r\n\r\n", (config_loss) ? "Default Config" : "Existing Config", reset_count);
 
 
   if(__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST) != RESET)
@@ -866,9 +871,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
  * It will filter the vehicle CAN messages and send the modified versions via CAN1 to the RCD330
  */
 
-void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
+void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 {
-	HAL_CAN_GetRxMessage(hcan2, CAN_RX_FIFO1, &can2_rxHeader, can2_RX);
+	HAL_CAN_GetRxMessage(hcan2_rx, CAN_RX_FIFO1, &can2_rxHeader, can2_RX);
 
 	uint curr_tick = HAL_GetTick();
 
@@ -994,105 +999,179 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 		 * 0x28 ok
 		 */
 
+		// default is to tx msgs (long press buttons will suppress this)
 		int tx_msg = 1;
 
 		// presumably button active msgs are sent every 100ms while pressed
 		// as soon as the clear msgs 0x00 arrives, check the time from 1st active msg.
 
-		if(can1_TX[0] == 0x00)	// clear
+		if(can1_TX[0] == 0x00)	// ************** Clear
 		{
 			// all buttons off, so check for a long press on useful buttons
-
-			// force length 8
-			can1_txHeader.DLC = (uint32_t) 8;
 
 			// note that currently the msgs are still sent via the filter code below
 			// we are not yet stopping messages getting to the radio, only changing which button is being identified...
 			// in future, perhaps we can block the short msgs in the filter and send them manually via the short press detection in this routine...
 
 
-			// Mute (Star)
+			// ************** Up
+			// if in RCD330 mode, we want to fake a down msg to the MFD, so it does not seem impacted
+			// these might be sent too quickly, so might have to build a 100ms state machine triggered in the main loop  - just to send button presses...?
+
+
+			// Up Cleared
+			if(button_time.up > 0)
+			{
+				uint dur = curr_tick - button_time.up;
+
+				can2_txHeader.RTR = CAN_RTR_DATA;
+				can2_txHeader.IDE = CAN_ID_STD;
+				can2_txHeader.TransmitGlobalTime = DISABLE;
+				can2_txHeader.StdId = can2_rxHeader.StdId;
+				can2_txHeader.DLC = can2_rxHeader.DLC;
+
+				// check for RCD330 mode
+				if(button_state.up_next_code == 0x02)
+				{
+					UartPrintf("CAN2 Up RCD330 (clear) - send fake down\t[%u]\r\n", dur);
+
+					// as we are hijacking the clear for the original Up message,
+					// we need to send a clear, before the fake Down (which will "inherit" the original clear msgs)
+
+					// copy all bytes but first (not sure if these should be made zero?)
+					for(int i = 1; i < can2_rxHeader.DLC; i++)
+						can2_TX[i] = can2_RX[i];
+
+					// then send fake down msg back to car
+					can2_TX[0] = (uint8_t) 0x23;	// MFD down
+					if(HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox) != HAL_OK)
+						UartPrintf("CAN2 Tx Failed - Up- fake down\r\n");
+
+					// send a clear, although at least one original has been sent
+					can2_TX[0] = (uint8_t) 0x00;
+					if(HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox) != HAL_OK)
+						UartPrintf("CAN2 Tx Failed - Up - fake clear\r\n");
+				}
+				button_time.up = 0;
+			}
+
+
+			// Down cleared
+			if(button_time.down > 0)
+			{
+				uint dur = curr_tick - button_time.down;
+
+				can2_txHeader.RTR = CAN_RTR_DATA;
+				can2_txHeader.IDE = CAN_ID_STD;
+				can2_txHeader.TransmitGlobalTime = DISABLE;
+				can2_txHeader.StdId = can2_rxHeader.StdId;
+				can2_txHeader.DLC = can2_rxHeader.DLC;
+
+				// check for RCD330 mode
+				if(button_state.up_next_code == 0x02)
+				{
+					UartPrintf("CAN2 Down RCD330 (clear) - send fake up\t[%u]\r\n", dur);
+
+					// as we are hijacking the clear for the original Up message,
+					// we need to send a clear, before the fake Down (which will "inherit" the original clear msgs)
+
+					// copy all bytes but first (not sure if these should be made zero?)
+					for(int i = 1; i < can2_rxHeader.DLC; i++)
+						can2_TX[i] = can2_RX[i];
+
+					// then send fake down msg back to car
+					can2_TX[0] = (uint8_t) 0x22;	// MFD up
+					if(HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox) != HAL_OK)
+						UartPrintf("CAN2 Tx Failed - Down - fake up\r\n");
+
+					// send a clear, although at least one original has been sent
+					can2_TX[0] = (uint8_t) 0x00;
+					if(HAL_CAN_AddTxMessage(&hcan2, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox) != HAL_OK)
+						UartPrintf("CAN2 Tx Failed - Down - fake clear\r\n");
+				}
+				button_time.down = 0;
+			}
+
+
+
+			// ************** Mute (Star)
 			// Short Press Mute, Long press "Google Assitant"
-			uint dur = curr_tick - button_time.mute;
 
 			// check for a long press (> 1sec)
 			if(button_time.mute > 0)
 			{
+				uint dur = curr_tick - button_time.mute;
+
 				if(dur > 1000)
 				{
-					UartPrintf("CAN2 Mute Long press\t[%u]\r\n", dur);
-					can1_TX[0] = (uint8_t) 0x2a;
+					// long press mute will be handled in the main button route (not clear)
+					// this is so the long press can be activate while the button is still being pressed (rather than on release)
+
+					UartPrintf("CAN2 Mute Long press (clear)\t[%u]\r\n", dur);
+//					can1_TX[0] = (uint8_t) 0x2a;
 				}
 				else
 				{
-					UartPrintf("CAN2 Mute Short press\t[%u]\r\n", dur);
+					// only send short press mute here
+
+					UartPrintf("CAN2 Mute Short press (clear)\t[%u]\r\n", dur);
 					can1_TX[0] = (uint8_t) 0x2b;
+
+					// force to  DLC 8
+					can1_txHeader.DLC = (uint32_t) 8;
+
+					// clear all bytes but first
+					for(int i = 1; i < 8; i++)
+						can1_TX[i] = (uint8_t) 0x00;
+
+					// send one message and hope for the best...
+					// might need a couple...?
+					if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
+						UartPrintf("CAN1 Tx Failed - Mute\r\n");
+					// 2nd message, just in case
+					if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
+						UartPrintf("CAN1 Tx Failed - Mute\r\n");
 				}
 
-				// force to  DLC 8
-				can1_txHeader.DLC = (uint32_t) 8;
-
-				// clear all bytes but first
-				for(int i = 1; i < 8; i++)
-					can1_TX[i] = (uint8_t) 0x00;
-
-				// send one message and hope for the best...
-				// might need a couple...?
-				if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-					UartPrintf("CAN1 Tx Failed - Mute\r\n");
-
-				// set back to clear for the default send msg below...
+				// set back to original clear msg for the default send below...
 				can1_TX[0] = (uint8_t) 0x00;
-
+				button_time.mute = 0;
 			}
-			button_time.mute = 0;
 
 
-			// menu button clear
+			//************** menu button clear
 			// swap between MFD & RCD330 Mode (default) using short/long press of menu button
-			dur = curr_tick - button_time.menu;
 
 			if(button_time.menu > 0)
 			{
+				int dur = curr_tick - button_time.menu;
+
 				if(dur > 1000)
 				{
-					UartPrintf("CAN2 Menu Long press\t[%u]\r\n", dur);
+					UartPrintf("CAN2 Menu Long press (clear)\t[%u]\r\n", dur);
 
-					button_state.up_next_code = 0x02;
-					button_state.down_prev_code = 0x03;
-					//button_state.mute_google = 0x2b;
+					//button_state.up_next_code = 0x02;
+					//button_state.down_prev_code = 0x03;
+					////button_state.mute_google = 0x2b;
 				}
 				else
 				{
-					UartPrintf("CAN2 Menu Short press\t[%u]\r\n", dur);
+					UartPrintf("CAN2 Menu Short press (clear)\t[%u]\r\n", dur);
 					button_state.up_next_code = 0x22;
 					button_state.down_prev_code = 0x23;
 					//button_state.mute_google = 0x2a;
 				}
+				button_time.menu = 0;
 			}
-			button_time.menu = 0;
 
-			// phone ?
-			dur = curr_tick - button_time.phone;
 
-			if(button_time.phone > 0)
-			{
-				if(dur > 1000)
-				{
-					UartPrintf("CAN2 Phone Long press\t[%u]\r\n", dur);
-				}
-				else
-				{
-					UartPrintf("CAN2 Phone Short press\t[%u]\r\n", dur);
-				}
-			}
-			button_time.phone = 0;
 
-			// ok ?
-			dur = curr_tick - button_time.ok;
+			// ************** ok ?
 
 			if(button_time.ok > 0)
 			{
+				int dur = curr_tick - button_time.ok;
+
 				if(dur > 1000)
 				{
 					UartPrintf("CAN2 Ok Long press\t[%u]\r\n", dur);
@@ -1101,8 +1180,29 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 				{
 					UartPrintf("CAN2 Ok Short press\t[%u]\r\n", dur);
 				}
+				button_time.ok = 0;
 			}
-			button_time.ok = 0;
+
+
+#if 0
+			// ************** phone, can't use it as RCD330 already uses short & long press
+
+			if(button_time.phone > 0)
+			{
+				dur = curr_tick - button_time.phone;
+
+				if(dur > 1000)
+				{
+					UartPrintf("CAN2 Phone Long press\t[%u]\r\n", dur);
+				}
+				else
+				{
+					UartPrintf("CAN2 Phone Short press\t[%u]\r\n", dur);
+				}
+				button_time.phone = 0;
+			}
+#endif
+
 		}
 		else  // below here are the individual button filters
 		if(can1_TX[0] == 0x1d || can1_TX[0] == 0x1e) // Some unknown buttons => Phone
@@ -1113,9 +1213,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 			can1_TX[0] = (uint8_t) 0x1a;
 
 			can_stats.filter_msg_phone++;
-			can1_txHeader.DLC = (uint32_t) 8;
-			can_stats.filter_msg_dlc++;
-
 
 			if(debug_mode.filters)
 			{
@@ -1123,7 +1220,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 			}
 		}
 		else
-		if(can1_TX[0] == 0x22) // Up / Next
+		if(can1_TX[0] == 0x22) // ************** Up / Next
 		{
 			// Note the Up/Down buttons are a pain as they always change the MFD
 			// By hitting "menu" it is possible to stop them affecting the radius (i.e. MFD only mode)
@@ -1136,12 +1233,17 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 
 			// if this happens quick enough, maybe we won't notice the MFD glitching...?
 
+			// used to track up button release in clear code above - for fake down
+			if(button_time.up == 0)
+			{
+				// was off, so save time of first press msg
+				button_time.up = curr_tick;
+			}
+
+
 			can1_TX[0] = (uint8_t) button_state.up_next_code;
 
 			can_stats.filter_msg_up_next++;
-			can1_txHeader.DLC = (uint32_t) 8;
-			can_stats.filter_msg_dlc++;
-
 
 			if(debug_mode.filters)
 			{
@@ -1149,13 +1251,20 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 			}
 		}
 		else
-		if(can1_TX[0] == 0x23) // Down / Prev
+		if(can1_TX[0] == 0x23) // ************** Down / Prev
 		{
+
+			// used to track down button release in clear code above - for fake up
+			if(button_time.down == 0)
+			{
+				// was off, so save time of first press msg
+				button_time.down = curr_tick;
+			}
+
+
 			can1_TX[0] = (uint8_t) button_state.down_prev_code;
 
 			can_stats.filter_msg_down_prev++;
-			can1_txHeader.DLC = (uint32_t) 8;
-			can_stats.filter_msg_dlc++;
 
 
 			if(debug_mode.filters)
@@ -1165,7 +1274,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 
 		}
 		else
-		if(can1_TX[0] == 0x2b) // Mute / google
+		if(can1_TX[0] == 0x2b) // ************** Mute / google
 		{
 			// check for long press
 			if(button_time.mute == 0)
@@ -1174,27 +1283,36 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 				button_time.mute = curr_tick;
 			}
 
+			// handle long press detection, while still being pressed
+			uint dur = curr_tick - button_time.mute;
+
+			// assuming a long press is typically around 1 sec
+			// detect at 800ms, which should allow at least 2 modified msgs through, before the button is release
+			if(dur > 800)
+			{
+				UartPrintf("CAN2 Mute Long press (active)\t[%u]\r\n", dur);
+				can1_TX[0] = (uint8_t) 0x2a;
+			}
+			else
+			{
+				// flag to not send mute msgs immediately
+				// check the clear msgs above and send based on short/long press...
+				tx_msg = 0;
+			}
+
 #if 0
 			can1_TX[0] = (uint8_t) button_state.mute_google;
 			can_stats.filter_msg_mute++;
-
-			can1_txHeader.DLC = (uint32_t) 8;
-			can_stats.filter_msg_dlc++;
-
 
 			if(debug_mode.filters)
 			{
 				UartPrintf("CAN2 Filter [%8u]:\t5c1 [X] 2b XX XX XX XX XX XX XX\t==>\t5c1 [8] %02x 00 00 00 00 00 00 00\r\n", can_stats.can2_last_rx_tick, can1_TX[0]);
 			}
-#else
-			// don't send mute immediately
-			// check the clear msgs above and send based on short/long press...
-			tx_msg = 0;
 #endif
 		}
 #if 0
 		else
-		if(can1_TX[0] == 0x1a)	// phone - no filter
+		if(can1_TX[0] == 0x1a)	// ************** phone - no filter
 		{
 			// check for long press
 			if(button_time.phone == 0)
@@ -1202,10 +1320,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 				// was off, so save time of first press msg
 				button_time.phone = curr_tick;
 			}
-
-			// this is the same as default - don't change
-			can1_txHeader.DLC = (uint32_t) 8;
-			can_stats.filter_msg_dlc++;
 
 			if(debug_mode.filters)
 			{
@@ -1215,7 +1329,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 		}
 #endif
 		else
-		if(can1_TX[0] == 0x0a) // Menu, switch up/next functions (+google/seek testing)
+		if(can1_TX[0] == 0x0a) // ************** Menu, switch up/next functions (+google/seek testing)
 		{
 			// check for long press
 			if(button_time.menu == 0)
@@ -1223,6 +1337,27 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 				// was off, so save time of first press msg
 				button_time.menu = curr_tick;
 			}
+
+			// handle long press detection, while still being pressed
+			uint dur = curr_tick - button_time.menu;
+
+			// assuming a long press is typically around 1 sec
+			// detect at 800ms, which should allow at least 2 modified msgs through, before the button is release
+			if(dur > 800)
+			{
+				UartPrintf("CAN2 Menu Long press (active)\t[%u]\r\n", dur);
+
+				button_state.up_next_code = 0x02;
+				button_state.down_prev_code = 0x03;
+				//button_state.mute_google = 0x2b;
+			}
+			else
+			{
+				// flag to not send menu msgs immediately
+				// check the clear msgs above and send based on short/long press...
+				tx_msg = 1;
+			}
+
 
 #if 0
 			button_state.up_next_code = 0x22;
@@ -1233,8 +1368,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 #endif
 
 			can_stats.filter_msg_menu++;
-			can1_txHeader.DLC = (uint32_t) 8;
-			can_stats.filter_msg_dlc++;
 
 			if(debug_mode.filters)
 			{
@@ -1243,7 +1376,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 
 		}
 		else
-		if(can1_TX[0] == 0x28) // Ok, switch to next/prev functions (+ vol/mute)
+		if(can1_TX[0] == 0x28) // ************** Ok, switch to next/prev functions (+ vol/mute)
 		{
 			// it would be good to remove the dependancy on "ok" to switch to radio mode
 			// this is because "ok" still affects the MFD on some screens which can be annoying
@@ -1269,24 +1402,23 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 
 			can_stats.filter_msg_ok++;
 
-			can1_txHeader.DLC = (uint32_t) 8;
-			can_stats.filter_msg_dlc++;
 
 			if(debug_mode.filters)
 			{
 				UartPrintf("CAN2 Filter [%8u]:\t5c1 [X] 28 XX XX XX XX XX XX XX\t==>\t5c1 [8] 28 00 00 00 00 00 00 00\r\n", can_stats.can2_last_rx_tick);
 			}
 		}
-		else // default to original msg but forcing 8 byte length
+		else // ************** default to original msg but forcing 8 byte length
 		{
-			can1_txHeader.DLC = (uint32_t) 8;
-			can_stats.filter_msg_dlc++;
-
 			if(debug_mode.filters)
 			{
 				UartPrintf("CAN2 Filter [%8u]:\t5c1 [X] %02x XX XX XX XX XX XX XX\t==>\t5c1 [8] %02x 00 00 00 00 00 00 00\r\n", can_stats.can2_last_rx_tick, can1_TX[0], can1_TX[0]);
 			}
 		}
+
+		// all 0x5c1 are forced to DLC 8
+		can1_txHeader.DLC = (uint32_t) 8;
+		can_stats.filter_msg_dlc++;
 
 		// clear all bytes but first
 		for(int i = 1; i < 8; i++)
@@ -1294,11 +1426,11 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 
 		// send modified msg
 		if(tx_msg && HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
-			UartPrintf("CAN1 Tx Failed - 0x5c1\r\n");
+			UartPrintf("CAN1 Tx Failed - 0x5c1 (%02x)\r\n", can1_TX[0]);
 		can_stats.can1_tx_count++;
 	}
 	else
-	// Power Down ???  These messages seem to be from the RCD330 to the car
+	// ************** Power Down ???  These messages seem to be from the RCD330 to the car
 	if(can1_txHeader.StdId == 0x436 && can1_txHeader.DLC == 8 && can1_TX[0] == 0x01 && can1_TX[5] == 0x06)
 	{
 		if(debug_mode.filters)
@@ -1342,7 +1474,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 		can_stats.can1_tx_count++;
 	}
 	else
-	// Illumination
+	// ************** Illumination
 	if(can1_txHeader.StdId == 0x635 && can1_txHeader.DLC == 3 && can1_TX[0] == 0x00 && can1_TX[1] == 0x00 && can1_TX[2] == 0x00)
 	{
 
@@ -1364,7 +1496,7 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2)
 	}
 	else
 	{
-		// default is to send remaining msgs unchanged
+		// ************** default is to send remaining msgs unchanged
 		if(HAL_CAN_AddTxMessage(&hcan1, (CAN_TxHeaderTypeDef *) &can1_txHeader, can1_TX, &can1_Mailbox) != HAL_OK)
 			UartPrintf("CAN1 Tx Failed - default\r\n");
 		can_stats.can1_tx_count++;
