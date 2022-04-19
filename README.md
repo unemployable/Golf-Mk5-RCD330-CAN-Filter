@@ -85,7 +85,7 @@ BOOT0 is available on one of the pads on the back of the board.  NRST is connect
 FTDI connections were also attached to USART1 Tx, Rx & Gnd pads on the underside of the board.<BR>
 
 I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
-Aprarently it should work, but the HAL libraries might be preventing it from working.<BR>
+Apparently it should work, but the HAL libraries might be preventing it from working.<BR>
 I cheated by configuring the 3 spare *"config"* inputs and soldering links in parallel with each of the Rx pins (CAN1, CAN2 & USART1).<BR>
 These extra GPIO pins were then all configured as separate EXTI inputs (rising/falling) - seems to work fine...
 
