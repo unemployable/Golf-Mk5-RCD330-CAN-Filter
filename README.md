@@ -104,7 +104,8 @@ Power consumption is not that great, around 50ma running and 20ma in sleep/stop 
 The CAN drivers on these boards (MCP2551) seem to have pin 8 (Rs) permanently connected to Gnd.<BR>
 This forces *"High-Speed mode"* and has the highest consumption (max. 75mA).<BR>
 Tying this to Vcc should enable *"Standby or SLEEP mode"* (typ. under 1mA), which would be useful combined with STM32 sleep/stop mode.<BR>
-As the CAN Driver runs on 5V and the STM32 on 3.3V, controlling the "S" pin directly from GPIO might not work.
+As the CAN Driver runs on 5V and the STM32 on 3.3V, controlling the "S" pin directly from GPIO might not work.<BR>
+Will probably need to use a level shifter.
 	
 Vehicle time & temperature on the RCD330 also works (i.e. when not using Android Auto / CarPlay).
 
