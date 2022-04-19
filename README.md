@@ -33,18 +33,18 @@ Each CAN bus interface on the blue board will then have its own plug (i.e. separ
 12V BAT & GND (yellow/black) need to be tapped to power the blue board.<BR>
 ![Quadlock Pins](pics/QUADLOCK_small.png)
 
-On the Blue (SWD) Dual Filter Board:
-(Note: this matches the "new" green board)
+Cabling on the Blue (SWD) Dual Filter Board:<BR>
+(Note: this also matches the "new" green board)
 
-<B>CAN1 is the RCD330</B>
+<B>CAN1 is connected to the RCD330</B>
 * GREEN	 CAN High
 * PURPLE CAN Low
 
-<B>CAN2 is the Vehicle</B>
+<B>CAN2 is connected to the Vehicle</B>
 * BLUE	 CAN High
 * YELLOW CAN Low
 
-<B>PQ Quadlock connector (cheap one)</B>
+<B>PQ Quadlock connector (cheapy version, white/orange on the better one)</B>
 * Green	 CAN High
 * Purple CAN Low
 * YELLOW 12V Battery
