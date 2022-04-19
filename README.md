@@ -7,6 +7,8 @@ https://rcd330plus.com/showthread.php?tid=6741
 It is still very much a work in progress.<BR>
 A prototype of this blue board version, will soon be tested in a 2007 2.0 FSI Comfortline.
 	
+This version adds experimental support for long button presses (Mute/Menu) and attempts to work around inadvertent MFD changes. 
+	
 ## Hardware ##
 
 Rather than building my own hardware, I decided to search for an existing board that could be easily modified.<BR>
