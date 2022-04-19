@@ -78,7 +78,7 @@ UART4 was configured on PC10&11, an LED was connected to PC12 & PA15 was used as
 An FTDI adapter was then attached to UART4 during debugging.
 
 I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
-Aprarently it should work, but the HAL libraries might be preventing it from working.<BR>
+Apparently it should work, but the HAL libraries might be preventing it from working.<BR>
 The PA15 EXTI link above, is connected to CAN2 Rx as a work around.<BR>
 So in this blue board version, only the Vehicle CAN is able to wake the STM32 from sleep/stop state.
 
