@@ -44,7 +44,7 @@ Cabling on the Blue (SWD) Dual Filter Board:<BR>
 * BLUE	 CAN High
 * YELLOW CAN Low
 
-<B>PQ Quadlock connector (cheapy version, white/orange on the better one)</B>
+<B>PQ Quadlock connector (cheapy version, CAN is white/orange on the better one)</B>
 * Green	 CAN High
 * Purple CAN Low
 * YELLOW 12V Battery
