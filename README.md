@@ -36,19 +36,19 @@ Each CAN bus interface on the blue board will then have its own plug (i.e. separ
 On the Blue (SWD) Dual Filter Board:
 (Note: this matches the "new" green board)
 
-<B>CAN1 is the RCD330</B><BR>
-* GREEN	CAN High
-* PURPLE	CAN Low
+<B>CAN1 is the RCD330</B>
+* GREEN	 CAN High
+* PURPLE CAN Low
 
-CAN2 is the Vehicle
-	BLUE	CAN High
-	YELLOW	CAN Low
+<B>CAN2 is the Vehicle</B>
+* BLUE	 CAN High
+* YELLOW CAN Low
 
-PQ Quadlock connector (cheap one)
-	Green	CAN High
-	Purple	CAN Low
- 	YELLOW	12V Battery
-	BLACK	GND
+<B>PQ Quadlock connector (cheap one)</B>
+* Green	 CAN High
+* Purple CAN Low
+* YELLOW 12V Battery
+* BLACK	 GND
 	
 It is also necessary to make sure the solder links for the two 120 ohm termination resistors are not connected.<BR>
 Note: during testing, I had to short these out in order to work with a Dual CAN tester using <B>CANPro Analyzer</B> s/w.
