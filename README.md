@@ -103,7 +103,7 @@ So in this blue board version, only the vehicle CAN is able to wake the STM32 fr
 I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.
 
 In this version, I am starting to experiment with detecting a button *"long press"*.<BR>
-Currently, a *long press* of the Menu button switches it to *RCD330 mode*, (short press for *MFD mode*).<BR>
+Currently, a *long press* of the Menu button switches it to the default *RCD330 mode*, (short press for *MFD mode*).<BR>
 Also, a *long press* of the Mute/Star button will activate *Google Assistant/Siri*.<BR>
 Note: a *long press* of the *Phone* button is already detected by the RCD330 as "dial last number*.<BR>
 This leaves *long press* of the Ok button still available (not sure doing this on Up/Dn would be a good idea...?)
