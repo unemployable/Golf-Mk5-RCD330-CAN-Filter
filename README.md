@@ -131,7 +131,9 @@ Will probably need to use a level shifter.
 	
 Vehicle time & temperature on the RCD330 also works (i.e. when not using Android Auto / CarPlay).
 
+![RCD330 Dual CAN Filter Blue](pics/RCD330_Dual_CAN_Filter_Blue_small.png)
 
+	
 ## Future Work ##
 
 If this 2nd prototype proves to be reliable, I am considering some further enhancements:
