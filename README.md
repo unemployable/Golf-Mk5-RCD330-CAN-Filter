@@ -131,7 +131,7 @@ Will probably need to use a level shifter.
 	
 Vehicle time & temperature on the RCD330 also works (i.e. when not using Android Auto / CarPlay).
 
-<B>Version 2:</B><BR>
+<B>Version 2, ready for testing in the car:</B><BR>
 ![RCD330 Dual CAN Filter Blue](pics/RCD330_Dual_CAN_Filter_Blue_small.png)
 
 The RCA socket is for connecting the vehicle CAN Bus to the rear Flip Camera (Dynamic Lines).<BR>
