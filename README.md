@@ -36,7 +36,7 @@ Each CAN bus interface on the blue board will then have its own plug (i.e. separ
 ![Quadlock Pins](pics/QUADLOCK_small.png)
 
 Cabling on the Blue (SWD) Dual Filter Board:<BR>
-(Note: this also matched the "new" green board)
+(Note: these particular colours also matched my *"new"* green board, but they are NOT always consistent)
 
 <B>CAN1 is connected to the RCD330</B>
 * GREEN	 CAN High
