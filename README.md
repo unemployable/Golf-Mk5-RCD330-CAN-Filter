@@ -112,7 +112,6 @@ Tying this to Vcc should enable "listen-only silent mode" (typ. 6mA), which woul
 As the CAN Driver runs on 5V and the STM32 on 3.3V, controlling the "S" pin directly from GPIO might not work.
 	
 Vehicle time & temperature on the RCD330 also works (i.e. when not using Android Auto / CarPlay).
-![RCD330 Dual CAN Filter Blue](pics/RCD330_Dual_CAN_Filter_Blue_small.png)
 
 ## Future Work ##
 
