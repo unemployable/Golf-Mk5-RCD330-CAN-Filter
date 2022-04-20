@@ -121,6 +121,8 @@ All other 0x635 messages are sent through unchanged, so the variable dash back l
 0x635 [3] <B>0xNN</B> 0x00 0x00 (where <B>0xNN</B> varies from 0x1d to 0x62)<BR>
 
 I have also implemented the 0x436 & 0x439 filtering, but it does not seem to be invoked in my car.
+	
+Vehicle time & temperature on the RCD330 also works (i.e. when not using Android Auto / CarPlay).
 
 Power consumption is not that great, around 50ma running and 20ma in sleep/stop mode.<BR>
 The CAN drivers on these boards (MCP2551) seem to have pin 8 (Rs) permanently connected to Gnd.<BR>
@@ -129,7 +131,6 @@ Tying this to Vcc should enable *"Standby or SLEEP mode"* (typ. under 1mA), whic
 As the CAN Driver runs on 5V and the STM32 on 3.3V, controlling the "S" pin directly from GPIO might not work.<BR>
 Will probably need to use a level shifter.
 	
-Vehicle time & temperature on the RCD330 also works (i.e. when not using Android Auto / CarPlay).
 
 <B>Version 2, ready for testing in the car:</B><BR>
 ![RCD330 Dual CAN Filter Blue](pics/RCD330_Dual_CAN_Filter_Blue_small.png)
