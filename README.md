@@ -135,7 +135,7 @@ Vehicle time & temperature on the RCD330 also works (i.e. when not using Android
 ![RCD330 Dual CAN Filter Blue](pics/RCD330_Dual_CAN_Filter_Blue_small.png)
 
 The RCA socket is for connecting the vehicle CAN Bus to the rear Flip Camera (Dynamic Lines).<BR>
-The DC power plug and FTDI board will be removed on installation (after some preliminary testing).<BR>
+The DC power socket and FTDI board will be removed on installation (after some preliminary testing).<BR>
 They just make it easier to program and debug on the bench.<BR>
 I've also included a 500mA fuse, just in case!
 	
