@@ -52,8 +52,8 @@ Cabling on the Blue (SWD) Dual Filter Board:<BR>
 * YELLOW 12V Battery
 * BLACK	 GND
 	
-It is also necessary to make sure the solder links for the two 120 ohm termination resistors are not connected.<BR>
-Note: during testing, I had to short these out in order to work with a Dual CAN tester using <B>CANPro Analyzer</B> s/w.
+It is also necessary to cut the the links between the solder pads (next to the two 120 ohm termination resistors).<BR>
+Note: during bench testing, I had to short these out in order to work with a Dual CAN tester (USBCAN-2A) using <B>CANPro Analyzer</B> s/w.
 
 Now any CAN message from the car will need to go through the blue CAN filter to get to the radio (and vice versa).
 
