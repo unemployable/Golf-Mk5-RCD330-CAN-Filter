@@ -28,7 +28,7 @@ Most of the green versions are newer than in the articles above, using different
 It is still possible to buy the older green version, but it's almost twice the price:<BR>
   https://www.aliexpress.com/item/1005003130024266.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
 
-I've combined a "new" green version with one of these common RCD330-PQ adapter cables:<BR>
+I've combined a "new" green version with one of these common RCD330/PQ adapter cables:<BR>
   https://www.aliexpress.com/item/1005003052063834.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn
 ![RCD330-PQ-Adapter](pics/RCD330_CAN_Adapter_small.png)
 	
