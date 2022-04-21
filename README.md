@@ -90,7 +90,7 @@ I cheated by configuring the 3 spare *"config"* inputs and soldering links in pa
 These extra GPIO pins were then all configured as separate EXTI inputs (rising/falling) - seems to work fine...
 
 I have also added an alternate function on the Mute (Star) button to send the Google Assistant (Siri) message in *MFD mode*.<BR>
-This was done because the *"Hey Google"* voice detection on the RCD330 is a bit flaky at times.
+This was done because the *"Ok Google"* voice detection on the RCD330 is a bit flaky at times.
 
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
 0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
