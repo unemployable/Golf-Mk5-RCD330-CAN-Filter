@@ -89,7 +89,6 @@ __attribute__((section(".noinit"))) volatile uint32_t reset_count;
 
 
 // stuff to support the button state machine
-
 enum button_states
 {
 	IDLE,
@@ -155,7 +154,6 @@ __attribute__((section(".noinit"))) volatile struct
 
 	uint buttons;
 } debug_mode = { 0, 0, 0, 0, 0xdc, 0, 0x5c1, 0, 1};
-//} debug_mode = { 1, 1, 1, 1, 0xdc, 0, 0x5c1, 1};
 
 
 struct
@@ -184,18 +182,13 @@ struct
 
 	  uint filter_msg_436_pwr;
 	  uint filter_msg_439_pwr;
-
-
-
 } can_stats = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
 
 
 #ifndef max
     #define min(a,b) ((a) < (b) ? (a) : (b))
 	#define max(a,b) ((a) > (b) ? (a) : (b))
 #endif
-
 
 
 /* USER CODE END PV */
@@ -253,7 +246,6 @@ void can_send_button(CAN_HandleTypeDef *hcan, uint key)
 	{
 		can2_TX[i] = 0x00;
 	}
-
 
 	HAL_CAN_AddTxMessagex(hcan, (CAN_TxHeaderTypeDef *) &can2_txHeader, can2_TX, &can2_Mailbox);
 }
@@ -360,7 +352,6 @@ int main(void)
 
 	// "new" green board: https://i.imgur.com/Oss24pO.jpeg
 	// mine came with an STM32F107RB (same PCB)
-
 
 
 	// First ideas for the S/W:
@@ -472,7 +463,6 @@ int main(void)
 
   UartPrintf("\r\nDual CAN Filter v1.2 Blue Board (100kb/s) %s [ reset_count %u ]\r\n\r\n", (config_loss) ? "Default Config" : "Existing Config", reset_count);
 
-
   if(__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST) != RESET)
 	  UartPrintf("Reset caused by IWDGRST\r\n\r\n");
   else if(__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) != RESET)
@@ -491,7 +481,6 @@ int main(void)
   UartPrintf("Starting...\r\n\r\n");
 
   UartPrintf("Going into to Sleep/Stop Mode\r\n\r\n");
-
 
 #ifdef WATCHDOG
 
@@ -514,7 +503,6 @@ int main(void)
   HAL_UART_Receive_IT (&huart4, serial_mode, 1);
   MX_IWDG_Init();
 
-
 #endif
 
   UartPrintf("EXTI %d - Waking from Sleep Stop Mode\r\n\r\n", (int) EXTI->PR);
@@ -523,13 +511,11 @@ int main(void)
 
   UartPrintf("Printing: %s\r\n\r\n", (print_flag) ? "On" : "Off");
 
-
 // using these for EXTI IWDG wakeup (CAN1, CAN2 & USART1)
 //  HAL_GPIO_WritePin(GPIOB, OUT1_Pin,1);
 //  HAL_GPIO_WritePin(GPIOB, OUT2_Pin,0);
 //  HAL_GPIO_WritePin(GPIOB, OUT3_Pin,1);
 //  HAL_GPIO_WritePin(GPIOB, CONF_S4_LED_Pin, GPIO_PIN_RESET);
-
 
   // CAN1
   canfil.FilterBank = 0;
@@ -560,11 +546,9 @@ int main(void)
   //canfil.FilterActivation = DISABLE;
   canfil.SlaveStartFilterBank = 14;	// important !!!
 
-
   HAL_CAN_ConfigFilter(&hcan2,&canfil);
   HAL_CAN_Start(&hcan2);
   HAL_CAN_ActivateNotification(&hcan2,CAN_IT_RX_FIFO1_MSG_PENDING);
-
 
 
   // don't need to do much here (just print stats), as CAN Filters & USART are interrupt driven
@@ -599,7 +583,6 @@ int main(void)
 			  UartPrintf("filter_msg_635_illum:\t%d\r\n\r\n", can_stats.filter_msg_635_illum);
 
 			  last_tick = current_tick;
-
 		  }
 	  }
 
@@ -698,7 +681,6 @@ int main(void)
 		default :
 			UartPrintf("Default - Error\t[%u]\r\n", current_tick);
 		break;
-
 	}
 
 	current_state = next_state;
@@ -708,7 +690,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
 
   }
   /* USER CODE END 3 */
@@ -937,7 +918,6 @@ static void MX_GPIO_Init(void)
 // wrapper function to enable Tx debug msgs
 HAL_StatusTypeDef HAL_CAN_AddTxMessagex(CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *can_txHeader, uint8_t *can_TX, uint32_t *can_Mailbox)
 {
-
 	char *canbus;
 
 	uint tick = HAL_GetTick();
@@ -970,7 +950,6 @@ HAL_StatusTypeDef HAL_CAN_AddTxMessagex(CAN_HandleTypeDef *hcan, CAN_TxHeaderTyp
 		UartPrintf("\r\n");
 	}
 
-
 	return HAL_CAN_AddTxMessage(hcan, can_txHeader, can_TX, can_Mailbox);
 }
 
@@ -983,7 +962,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 {
 	HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &can1_rxHeader, can1_RX);
 
-
 	/*
 		  txHeader.DLC = 8;
 		  txHeader.IDE = CAN_ID_STD;
@@ -992,7 +970,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 		  txHeader.ExtId = 0x02;
 		  txHeader.TransmitGlobalTime = DISABLE;
 	*/
-
 
 	can2_txHeader.RTR = CAN_RTR_DATA;
 	can2_txHeader.IDE = CAN_ID_STD;
@@ -1010,7 +987,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 	}
 
 	__enable_irq();
-
 
 	if(debug_mode.enable_led)
 		HAL_GPIO_TogglePin(CONF_S4_LED_GPIO_Port, CONF_S4_LED_Pin);
@@ -1051,19 +1027,16 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
  *
  * It will filter the vehicle CAN messages and send the modified versions via CAN1 to the RCD330
  */
-
 void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 {
 	HAL_CAN_GetRxMessage(hcan2_rx, CAN_RX_FIFO1, &can2_rxHeader, can2_RX);
 
 	uint curr_tick = HAL_GetTick();
 
-
 	// defaults
 	can1_txHeader.RTR = CAN_RTR_DATA;
 	can1_txHeader.IDE = CAN_ID_STD;
 	can1_txHeader.TransmitGlobalTime = DISABLE;
-
 
 	// copy over useful stuff for tx-ing
 	// modify as appropriate below...
@@ -1083,7 +1056,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 	can1_txHeader.IDE = CAN_ID_STD;
 	can1_txHeader.TransmitGlobalTime = DISABLE;
 
-
 	if(debug_mode.enable_led)
 		HAL_GPIO_TogglePin(CONF_S4_LED_GPIO_Port, CONF_S4_LED_Pin);
 
@@ -1092,7 +1064,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 
 	if(debug_mode.can2)
 	{
-
 		if(!(debug_mode.filter_id_en && (debug_mode.filter_id_num != can1_txHeader.StdId)))
 		{
 				UartPrintf("%8u [%8u]     CAN2   Rx: 0x%.3x ", can_stats.can2_last_rx_tick, can_stats.can2_rx_count, (int) can1_txHeader.StdId);
@@ -1105,7 +1076,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				}
 				UartPrintf("\r\n");
 		}
-
 	}
 
 
@@ -1148,7 +1118,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 	 *
 	 */
 
-
 	// IWDG
 	if(can1_txHeader.StdId == 0x2c3 || can1_txHeader.StdId == 0x575)
 	{
@@ -1166,7 +1135,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 	// Steering Buttons
 	if(can1_txHeader.StdId == 0x5c1)
 	{
-
 		/*
 		 * 0x5c1 Data[0] button
 		 * 0x00 No buttons pressed
@@ -1185,7 +1153,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 
 		// default full delay for new button press requests in state machine...
 		key_delay = DELAY_1;
-
 
 		// if new msg is not a clear, new button sequence so disable the clear suppression flag
 		// needed for short press mute, where we send a completely new msg (so discard old mute msgs)
@@ -1208,7 +1175,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 			// ************** Up
 			// if in RCD330 mode, we want to fake a down msg to the MFD, so it does not seem impacted
 			// these might be sent too quickly, so might have to build a 100ms state machine triggered in the main loop  - just to send button presses...?
-
 
 			// Up Cleared
 			if(button_time.up > 0)
@@ -1233,7 +1199,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				button_time.up = 0;
 			}
 
-
 			// Down cleared
 			if(button_time.down > 0)
 			{
@@ -1256,7 +1221,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				}
 				button_time.down = 0;
 			}
-
 
 
 			// ************** Mute (Star)
@@ -1303,7 +1267,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				button_time.mute = 0;
 			}
 
-
 			//************** menu button clear
 			// swap between MFD & RCD330 Mode (default) using short/long press of menu button
 
@@ -1335,8 +1298,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				button_time.menu = 0;
 			}
 
-
-
 			// ************** ok ?
 
 			if(button_time.ok > 0)
@@ -1359,7 +1320,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				}
 				button_time.ok = 0;
 			}
-
 		} // ************** End of clear msg handler
 		else  // below here are the individual button filters
 		if(can1_TX[0] == 0x1d || can1_TX[0] == 0x1e) // Some unknown buttons => Phone
@@ -1397,7 +1357,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				button_time.up = curr_tick;
 			}
 
-
 			can1_TX[0] = (uint8_t) button_state.up_next_code;
 
 			can_stats.filter_msg_up_next++;
@@ -1410,7 +1369,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 		else
 		if(can1_TX[0] == 0x23) // ************** Down / Prev
 		{
-
 			// used to track down button release in clear code above - for fake up
 			if(button_time.down == 0)
 			{
@@ -1418,17 +1376,14 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				button_time.down = curr_tick;
 			}
 
-
 			can1_TX[0] = (uint8_t) button_state.down_prev_code;
 
 			can_stats.filter_msg_down_prev++;
-
 
 			if(debug_mode.filters)
 			{
 				UartPrintf("CAN2 Filter [%8u]:\t5c1 [X] 23 XX XX XX XX XX XX XX\t==>\t5c1 [8] %02x 00 00 00 00 00 00 00\r\n", can_stats.can2_last_rx_tick, can1_TX[0]);
 			}
-
 		}
 		else
 		if(can1_TX[0] == 0x2b) // ************** Mute / google
@@ -1459,7 +1414,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				// check the clear msgs above and send based on short/long press...
 				tx_msg = 0;
 			}
-
 		}
 		else
 		if(can1_TX[0] == 0x0a) // ************** Menu, switch up/next functions (+google/seek testing)
@@ -1494,14 +1448,12 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 				tx_msg = 1;
 			}
 
-
 			can_stats.filter_msg_menu++;
 
 			if(debug_mode.filters)
 			{
 				UartPrintf("CAN2 Filter [%8u]:\t5c1 [X] 0a XX XX XX XX XX XX XX\t==>\t5c1 [8] 0a 00 00 00 00 00 00 00\r\n", can_stats.can2_last_rx_tick);
 			}
-
 		}
 		else
 		if(can1_TX[0] == 0x28) // ************** Ok, switch to next/prev functions (+ vol/mute)
@@ -1603,10 +1555,11 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 	// ************** Illumination
 	if(can1_txHeader.StdId == 0x635 && can1_txHeader.DLC == 3 && can1_TX[0] == 0x00 && can1_TX[1] == 0x00 && can1_TX[2] == 0x00)
 	{
+		// from observation, when lights are on, data[0] (backlight) varies 0x1d-0x62 (based on dash brightness setting).
+		// this will be sent through without changes.
 
-		// from observation, when lights are on, this varies 0x1d-0x62 (based on dash brightness setting).
-		// when lights are off, this is set to 0x00 (which RCD330 takes as min brightness)
-		// max brightness seems to be 0xfd, 0xffe & 0xff seem to be dimmer...
+		// when lights are off, this is set to 0x00, RCD330 then uses data[2] for max brightness level
+		// max brightness data[2] seems to be 0xfd, 0xffe & 0xff seem to be dimmer...
 		// default 0xdc seems to be ok...
 
 		if(debug_mode.filters)
@@ -1633,8 +1586,6 @@ void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan2_rx)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-
-
     // real time debug options
     switch(*serial_mode)
     {
@@ -1757,8 +1708,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
     }
     HAL_UART_Receive_IT(&huart4, serial_mode, 1);
-
-
 }
 
 
