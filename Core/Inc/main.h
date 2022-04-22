@@ -35,7 +35,6 @@ extern "C" {
 #include <stdarg.h>
 #include <string.h>
 #include <stdlib.h>
-#include "retarget.h"
 
 /* USER CODE END Includes */
 
