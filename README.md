@@ -111,7 +111,7 @@ This leaves *long press* of the Ok button still available (not sure doing this o
 In *RCD330 mode*, this version is also sends "opposite messages" back to the MFD for the Up/Down buttons.<BR>
 Unfortunately, sending 0x5c1 messages back from the radio towards the MFD does not work :(<BR>
 The CAN Gateway might be blocking them, or there is another Msg Id required.<BR>
-In this article it describes controlling an MFD+ from the radio:<BR>
+This article describes how to control an MFD+ from the radio:<BR>
 https://pccar-ru.translate.goog/showthread.php?t=24102&_x_tr_sch=http&_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en-US&_x_tr_pto=wapp<BR>
 It requires DDP commands running over CAN TP2.0 protocol, something like this might be needed to scroll the MFD menus?
 	
