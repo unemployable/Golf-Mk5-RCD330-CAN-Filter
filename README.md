@@ -5,7 +5,7 @@ This DIY project is based on great ideas and information found in this forum:<BR
 https://rcd330plus.com/showthread.php?tid=6741
 
 It is still very much a work in progress.<BR>
-A prototype of this blue board version, is being tested in a 2007 2.0 FSI Comfortline.
+A prototype of this blue board version is being tested in a 2007 2.0 FSI Comfortline.
 	
 This version also adds support for long button press (Mute/Menu).
 	
