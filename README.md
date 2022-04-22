@@ -7,7 +7,7 @@ https://rcd330plus.com/showthread.php?tid=6741
 It is still very much a work in progress.<BR>
 A prototype of this blue board version, will soon be tested in a 2007 2.0 FSI Comfortline.
 	
-This version also adds experimental support for long button press (Mute/Menu) and attempts to work around inadvertent MFD changes. 
+This version also adds experimental support for long button press (Mute/Menu).
 	
 ## Hardware ##
 
@@ -108,7 +108,12 @@ Also, a *long press* of the Mute/Star button will activate *Google Assistant/Sir
 Note: a *long press* of the *Phone* button is already detected by the RCD330 as "dial last number*.<BR>
 This leaves *long press* of the Ok button still available (not sure doing this on Up/Dn would be a good idea...?)
 	
-In *RCD330 mode*, this version is also sending brief, opposite messages back to the MFD for the Up/Down buttons.
+In *RCD330 mode*, this version is also sends "opposite messages" back to the MFD for the Up/Down buttons.<BR>
+Unfortunately, sending 0x5c1 messages back from the radio towards the MFD does not work :(<BR>
+The CAN Gateway might be blocking them, or there is another Msg Id required.<BR>
+In this article it describes controlling an MFD+ from the radio:<BR>
+https://pccar-ru.translate.goog/showthread.php?t=24102&_x_tr_sch=http&_x_tr_sl=auto&_x_tr_tl=en&_x_tr_hl=en-US&_x_tr_pto=wapp<BR>
+It requires DDP protocol over TP2.0, perhaps something like this is needed to scroll the MFD menus?
 	
 The brightness message (lights off) was also detected and modified (as discussed in the forum).<BR>
 0x635 [3] 0x00 0x00 <B>0x00</B> is changed to:<BR>
