@@ -21,7 +21,7 @@ and then on to these pages:<BR>
  https://dangerouspayload.com/2020/03/10/hacking-a-mileage-manipulator-can-bus-filter-device<BR>
  https://giddi.net/posts/reversing-a-canbus-odometer-filter-manipulator
 	
-So far, I've only found one other project that is based on these devices:<BR>
+So far, I've only found one other project that is using these devices:<BR>
 https://github.com/EliasKotlyar/E46-RPM-CAN-Filter, which is based on:<BR>
 https://github.com/EliasKotlyar/Canfilter
 
