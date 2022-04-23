@@ -112,7 +112,7 @@ Also, a *long press* of the Mute/Star button will activate *Google Assistant/Sir
 Note: a *long press* of the *Phone* button is already detected by the RCD330 as "dial last number*.<BR>
 This leaves *long press* of the Ok button still available (not sure doing this on Up/Dn would be a good idea...?)
 	
-In *RCD330 mode*, this version is also sends "opposite messages" back to the MFD for the Up/Down buttons.<BR>
+In *RCD330 mode*, this version also sends "opposite messages" back to the MFD for the Up/Down buttons.<BR>
 Unfortunately, sending 0x5c1 messages back from the radio towards the MFD does not work :(<BR>
 The CAN Gateway might be blocking them, or there is another Msg Id required.<BR>
 This article describes how to control an MFD+ from the radio:<BR>
