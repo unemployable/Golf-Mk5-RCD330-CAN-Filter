@@ -20,6 +20,9 @@ This search led me to an interesting video:<BR>
 and then on to these pages:<BR>
  https://dangerouspayload.com/2020/03/10/hacking-a-mileage-manipulator-can-bus-filter-device<BR>
  https://giddi.net/posts/reversing-a-canbus-odometer-filter-manipulator
+	
+So far, I've only found one other project that is based on these devices:<BR>
+https://github.com/EliasKotlyar/E46-RPM-CAN-Filter
 
 These STM32 boards are readily available for under AU$30<BR>
   https://www.aliexpress.com/item/4000238881021.html?spm=a2g0o.order_list.0.0.21ef1802x5VOwn<BR>
