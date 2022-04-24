@@ -96,8 +96,12 @@ I ended up using STM32CubeIDE, which only supports programming via SWD/JTAG, not
 This suits the blue board, as SWD is available via a pin header.<BR>
 It made flashing the board much easier than the green version.
 	
-The blue board also has 4 *"conf"* solder pads available, connected to GPIO: PA15 & PC10-12.<BR>
-UART4 was configured on PC10&11, an LED was connected to PC12 & PA15 was initially used as an EXTI input.<BR>
+The blue board also has 4 *"conf"* solder pads available, connected to GPIO pins as follows:
+	| Pad       | GPIO Pin | Function |
+	| CONF_S4   | PC11     | LED      |
+	| CONF_W222 | PC11     | UART4 Rx |
+	| CONF_W166 | PC10     | UART4 Tx |
+	| CONF_BMW  | PA15     | Was EXTI |
 An FTDI adapter was then attached to UART4 during debugging.
 
 <S>I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
