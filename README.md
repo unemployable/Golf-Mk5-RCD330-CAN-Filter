@@ -42,6 +42,13 @@ Each CAN bus interface on the blue board will then have its own plug (i.e. separ
 Cabling on the Blue (SWD) Dual Filter Board:<BR>
 (Note: these particular colours also matched my *"new"* green board, but they are NOT always consistent)
 
+| CAN Bus | Polarity | Colour |
+| --- | --- | --- |
+| CAN1 | High | Green |
+| CAN1 | Low | Purple |
+| CAN2 | High | Blue |
+| CAN2 | Low | Yellow |
+	
 <B>CAN1 is connected to the RCD330</B>
 * GREEN	 CAN High
 * PURPLE CAN Low
