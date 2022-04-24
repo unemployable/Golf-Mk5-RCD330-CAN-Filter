@@ -117,7 +117,7 @@ void EXTI15_10_IRQHandler(void)
 
   /* USER CODE END EXTI15_10_IRQn 1 */
 }
-<CODE>
+</CODE>
 	
 	
 In this version, I am starting to experiment with detecting a button *"long press"*.<BR>
