@@ -47,7 +47,6 @@ IWDG_HandleTypeDef hiwdg;
 UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
-
 CAN_RxHeaderTypeDef can1_rxHeader; //CAN Bus Rx Header
 CAN_RxHeaderTypeDef can2_rxHeader; //CAN Bus Rx Header
 
@@ -190,7 +189,6 @@ struct
 	#define max(a,b) ((a) > (b) ? (a) : (b))
 #endif
 
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -201,16 +199,13 @@ static void MX_CAN2_Init(void);
 static void MX_UART4_Init(void);
 static void MX_IWDG_Init(void);
 /* USER CODE BEGIN PFP */
-
 HAL_StatusTypeDef HAL_CAN_AddTxMessagex(CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *can_txHeader, uint8_t *can_TX, uint32_t *can_Mailbox);
 void UartPrintf(const char *format, ...);
 void can_send_button(CAN_HandleTypeDef *hcan, uint key);
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 void UartPrintf(const char *format, ...)
 {
 	char buffer[128];
@@ -259,7 +254,6 @@ void can_send_button(CAN_HandleTypeDef *hcan, uint key)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
 	/*
 	 * need this changed/added in the linker script:
 	 *
@@ -442,9 +436,7 @@ int main(void)
   MX_UART4_Init();
   //MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
-
   HAL_UART_Receive_IT (&huart4, serial_mode, 1);
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -507,7 +499,7 @@ int main(void)
 
   UartPrintf("EXTI %d - Waking from Sleep Stop Mode\r\n\r\n", (int) EXTI->PR);
 
-  print_flag = 0;
+  print_flag = 1;
 
   UartPrintf("Printing: %s\r\n\r\n", (print_flag) ? "On" : "Off");
 
@@ -552,7 +544,7 @@ int main(void)
 
 
   // don't need to do much here (just print stats), as CAN Filters & USART are interrupt driven
-  while(1)
+  while (1)
   {
 	  // Get time elapsed
 	  current_tick = HAL_GetTick();
@@ -690,7 +682,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
   }
   /* USER CODE END 3 */
 }
@@ -892,13 +883,16 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(CONF_S4_LED_GPIO_Port, CONF_S4_LED_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(CONF_S4_LED_GPIO_Port, CONF_S4_LED_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : CONF_BMW_EXTI_Pin */
-  GPIO_InitStruct.Pin = CONF_BMW_EXTI_Pin;
+  /*Configure GPIO pins : PA5 CONF_BMW_EXTI_Pin */
+//  GPIO_InitStruct.Pin = GPIO_PIN_11|CONF_BMW_EXTI_Pin;
+
+  // CAN1 Rx (PA11) EXTI
+  GPIO_InitStruct.Pin = GPIO_PIN_11;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(CONF_BMW_EXTI_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : CONF_S4_LED_Pin */
   GPIO_InitStruct.Pin = CONF_S4_LED_Pin;
@@ -907,7 +901,25 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(CONF_S4_LED_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PB4 */
+//  GPIO_InitStruct.Pin = GPIO_PIN_4;
+//  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+//  GPIO_InitStruct.Pull = GPIO_NOPULL;
+//  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : CAN2 Rx (PB5) EXTI */
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
   /* EXTI interrupt init*/
+//  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
+//  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
@@ -1710,7 +1722,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     HAL_UART_Receive_IT(&huart4, serial_mode, 1);
 }
 
-
 /* USER CODE END 4 */
 
 /**
@@ -1721,11 +1732,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-	  UartPrintf("Error_Handler() Invoked => NVIC_SystemReset\r\n");
-
-	  NVIC_SystemReset();
-
-	  __disable_irq();
+  __disable_irq();
   while (1)
   {
   }
