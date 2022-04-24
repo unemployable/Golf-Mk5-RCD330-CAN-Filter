@@ -125,7 +125,7 @@ void EXTI15_10_IRQHandler(void)
 	
 This is in addition to adding it to <B>MX_GPIO_Init()</B> in <B><I>main.c</I></B>
 
-	```
+```
 GPIO_InitStruct.Pin = GPIO_PIN_11|CONF_BMW_EXTI_Pin;)
 ```
 	
