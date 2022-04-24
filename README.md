@@ -96,7 +96,7 @@ I ended up using STM32CubeIDE, which only supports programming via SWD/JTAG, not
 This suits the blue board, as SWD is available via a pin header.<BR>
 It made flashing the board much easier than the green version.
 	
-The blue board also has 4 *"conf"* solder pads available, connected to GPIO pins as follows:
+The blue board also has 4 *"conf"* solder pads available, connected as follows:
 	
 | Pad | GPIO Pin | Function |
 | --- | --- | --- |
