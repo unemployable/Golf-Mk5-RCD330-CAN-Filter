@@ -75,6 +75,13 @@ Their example code runs on an STM32F051 (which I didn't have), so I ported it to
 Amazingly, it worked and I now have a binary that can be reverse engineered with Ghidra.
 
 It turns out there are only a few messages being checked/modified:<BR>
+	
+| Msg Id | Function |
+| --- | --- |
+| *0x2c3/0x575* | Reset the watch dog timer (avoid sleep/stop mode, while car is active) |
+| *0x5c1* | Steering Wheel buttons, Up/Down map to Next/Prev in RCD330 |
+| *0x436/0x439* | Presumably to fix power down issues, although my car does not send them. |
+
 * <B>0x2c3/0x575</B><BR>Reset the watch dog timer (avoid sleep/stop mode, while car is active)<BR>
 * <B>0x5c1</B><BR>Steering Wheel buttons, Up/Down map to Next/Prev in RCD330<BR>
 * <B>0x436/0x439</B><BR>Presumably to fix power down issues, although my car does not send them.<BR>
