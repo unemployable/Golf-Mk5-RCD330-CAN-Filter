@@ -100,11 +100,13 @@ The blue board also has 4 *"conf"* solder pads available, connected to GPIO: PA1
 UART4 was configured on PC10&11, an LED was connected to PC12 & PA15 was used as an EXTI input.<BR>
 An FTDI adapter was then attached to UART4 during debugging.
 
-I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
+<S>I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
 Apparently it should work, but the HAL libraries might be preventing it from working.<BR>
 The PA15 EXTI link above, is connected to CAN2 Rx as a work around.<BR>
 So in this blue board version, only the vehicle CAN is able to wake the STM32 from sleep/stop state.<BR>
-I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.
+I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.</S>
+	
+Finally got EXTI working on CAN1: in <I><B>stm32f1xx_it.c</B>,</I>, needed to explicitly add <B>GPIO_PIN_11</B> 
 
 ```c
 void EXTI15_10_IRQHandler(void)
