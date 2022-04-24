@@ -122,7 +122,10 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE END EXTI15_10_IRQn 1 */
 }
 ```
-	
+This is in addition to adding it to <B>MX_GPIO_Init</B> in main.c
+```
+GPIO_InitStruct.Pin = GPIO_PIN_11|CONF_BMW_EXTI_Pin;)
+```
 	
 In this version, I am starting to experiment with detecting a button *"long press"*.<BR>
 Currently, a *long press* of the Menu button switches it to the default *RCD330 mode*, (short press for *MFD mode*).<BR>
