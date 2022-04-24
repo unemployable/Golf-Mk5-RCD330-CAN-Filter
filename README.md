@@ -106,9 +106,10 @@ The PA15 EXTI link above, is connected to CAN2 Rx as a work around.<BR>
 So in this blue board version, only the vehicle CAN is able to wake the STM32 from sleep/stop state.<BR>
 I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.</S>
 	
-Finally got EXTI working on CAN1: in <I><B>stm32f1xx_it.c</B></I>, needed to explicitly add <B>GPIO_PIN_11</B> (CAN1 Rx PA11).<BR>
-CAN2 Rx (PB5) is similar, but uses EXTI9_5_IRQHandler() rather than EXTI15_10_IRQHandler().
-
+Finally got EXTI working directly with the CAN Rx pins.<BR>
+In <I><B>stm32f1xx_it.c</B></I>, needed to explicitly add each GPIO Pin explicitly into the IRQ Handlers.<BR>
+	For CAN1 Rx (PA11): in <B>EXTI15_10_IRQHandler()</B> added <B>GPIO_PIN_11</B>.<BR>
+For CAN2 Rx (PB5):  in <B>EXTI9_5_IRQHandler()<?B> added <B>GPIO_PIN_5</B>.
 ```c
 void EXTI9_5_IRQHandler(void)
 {
@@ -134,9 +135,7 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE END EXTI15_10_IRQn 1 */
 }
 ```
-	
 This is in addition to adding the pins to <B>MX_GPIO_Init()</B> in <B><I>main.c</I></B>
-
 ```
   /*Configure GPIO pin : CAN1 Rx (PA11) EXTI */
   GPIO_InitStruct.Pin = GPIO_PIN_11;
