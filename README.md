@@ -106,9 +106,22 @@ The PA15 EXTI link above, is connected to CAN2 Rx as a work around.<BR>
 So in this blue board version, only the vehicle CAN is able to wake the STM32 from sleep/stop state.<BR>
 I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.</S>
 	
-Finally got EXTI working on CAN1: in <I><B>stm32f1xx_it.c</B></I>, needed to explicitly add <B>GPIO_PIN_11</B> (CAN1 Rx PA11) 
+Finally got EXTI working on CAN1: in <I><B>stm32f1xx_it.c</B></I>, needed to explicitly add <B>GPIO_PIN_11</B> (CAN1 Rx PA11).<BR>
+CAN2 Rx (PB5) is similar, but uses EXTI9_5_IRQn rather than EXTI15_10_IRQHandler.
 
 ```c
+void EXTI9_5_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI9_5_IRQn 0 */
+
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
+
+  /* USER CODE END EXTI9_5_IRQn 0 */
+  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
+
+  /* USER CODE END EXTI9_5_IRQn 1 */
+}
+
 void EXTI15_10_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
@@ -116,17 +129,32 @@ void EXTI15_10_IRQHandler(void)
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
   
   /* USER CODE END EXTI15_10_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(CONF_BMW_EXTI_Pin);
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
 
   /* USER CODE END EXTI15_10_IRQn 1 */
 }
 ```
 	
-This is in addition to adding it to <B>MX_GPIO_Init()</B> in <B><I>main.c</I></B>
+This is in addition to adding the pins to <B>MX_GPIO_Init()</B> in <B><I>main.c</I></B>
 
 ```
-GPIO_InitStruct.Pin = GPIO_PIN_11|CONF_BMW_EXTI_Pin;
+  /*Configure GPIO pin : CAN1 Rx (PA11) EXTI */
+  GPIO_InitStruct.Pin = GPIO_PIN_11;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	
+  /*Configure GPIO pin : CAN2 Rx (PB5) EXTI */
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 ```
 Presumably the same can be done for CAN2 Rx PB5.<BR>
 Will need to configure PB4 to generate some boiler plate EXTI code and investigate further...
