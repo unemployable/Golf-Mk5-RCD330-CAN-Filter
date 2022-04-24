@@ -78,14 +78,11 @@ It turns out there are only a few messages being checked/modified:<BR>
 	
 | Msg Id | Function |
 | --- | --- |
-| *0x2c3/0x575* | Reset the watch dog timer (avoid sleep/stop mode, while car is active) |
-| *0x5c1* | Steering Wheel buttons, Up/Down map to Next/Prev in RCD330 |
-| *0x436/0x439* | Presumably to fix power down issues, although my car does not send them. |
+| * 0x2c3/0x575 * | Reset the watch dog timer (avoid sleep/stop mode, while car is active) |
+| * 0x5c1 * | Steering Wheel buttons, Up/Down map to Next/Prev in RCD330 |
+| * 0x436/0x439 * | Presumably to fix power down issues, although my car does not send them. Its CAN Gateway might be a version that already sends power down messages that the RCD330 understands. |
 
-* <B>0x2c3/0x575</B><BR>Reset the watch dog timer (avoid sleep/stop mode, while car is active)<BR>
-* <B>0x5c1</B><BR>Steering Wheel buttons, Up/Down map to Next/Prev in RCD330<BR>
-* <B>0x436/0x439</B><BR>Presumably to fix power down issues, although my car does not send them.<BR>
-Its CAN Gateway might be a version that already sends power down messages that the RCD330 understands.
+
 
 The module changes the operation of the Up/Down buttons by switching between two modes (using Menu/Ok).<BR>
 Pressing Menu (*MFD mode*), only the MFD screens are changed.<BR>
