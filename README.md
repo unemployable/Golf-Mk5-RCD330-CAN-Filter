@@ -155,11 +155,11 @@ This is in addition to adding the pins to <B>MX_GPIO_Init()</B> in <B><I>main.c<
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 ```
-Had to configure some "fake" EXTI pins (PB4 & PA5) in order to get CubeIDE to generate the required EXTI templates.
-Needed to manually modify them to use the correct pins (as above) and comment out any extra unwanted code for the fake pins...
-There should no longer be a need to solder additional wires to enable EXTI work arounds.
-Unfortunately it is not possible to also enable UART4 Rx EXTI (PA11), as it is shared with CAN1 Rx (PC11) (i.e. both pin 11).
-This is just a limitation of how the STM32 EXTI interrupts are multiplexed together between ports.
+Had to configure some "fake" EXTI pins (PB4 & PA5) in order to get CubeIDE to generate the required EXTI templates.<BR>
+Needed to manually modify them to use the correct pins (as above) and comment out any extra unwanted code for the fake pins...<BR>
+There should no longer be a need to solder additional wires to enable EXTI work arounds.<BR>
+Unfortunately it is not possible to also enable UART4 Rx EXTI (PA11), as it is shared with CAN1 Rx (PC11) (i.e. both pin 11).<BR>
+This is just a limitation of how the STM32 EXTI interrupts are multiplexed together between ports.<BR>
 
 In this version, I am starting to experiment with detecting a button *"long press"*.<BR>
 Currently, a *long press* of the Menu button switches it to the default *RCD330 mode*, (short press for *MFD mode*).<BR>
