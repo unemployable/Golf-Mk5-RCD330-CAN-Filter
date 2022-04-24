@@ -213,7 +213,7 @@ I've also included a 500mA fuse, just in case!
 If this 2nd prototype proves to be reliable, I am considering some further enhancements:
 
 * Investigate if controlling pin 8 (S) on the CAN Driver can reduce power consumption.<BR>
-  Would need to sacrifice the LED *"conf"* connection (use as a GPIO ouput to the *"S"* pin).
+  Will propbably use the spare CONF_BMW pin as a GPIO ouput connected to the *"S"* pins.
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons.
 * Investigate DDP & TP2.0 further, with the aim of scrolling through MFD screens from the radio.
 
