@@ -94,7 +94,7 @@ My car only has an MFD (Midline, Multi Function Display) in the instrument clust
 Arduino IDE does not support the STM32F105/107 used on these blue/green filter boards.<BR>
 I ended up using STM32CubeIDE, which only supports programming via SWD/JTAG, not serial.<BR>
 This suits the blue board, as SWD is available via a pin header.<BR>
-This made flashing the board much easier than the green version.
+It made flashing the board much easier than the green version.
 	
 The blue board also has 4 *"conf"* solder pads available, connected to GPIO: PA15 & PC10-12.<BR>
 UART4 was configured on PC10&11, an LED was connected to PC12 & PA15 was used as an EXTI input.<BR>
