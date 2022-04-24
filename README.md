@@ -98,7 +98,7 @@ It made flashing the board much easier than the green version.
 	
 The blue board also has 4 *"conf"* solder pads available, connected as follows:
 	
-| Pad | GPIO Pin | Function |
+| Pad | GPIO Pin | New Function |
 | --- | --- | --- |
 | CONF_S4  | PC12 | LED |
 | CONF_W222 | PC11 | UART4 Rx |
