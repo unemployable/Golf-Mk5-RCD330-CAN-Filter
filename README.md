@@ -128,7 +128,7 @@ This is in addition to adding it to <B>MX_GPIO_Init()</B> in <B><I>main.c</I></B
 ```
 GPIO_InitStruct.Pin = GPIO_PIN_11|CONF_BMW_EXTI_Pin;
 ```
-Presumably the same can be done for CAN2 Rx PB5.
+Presumably the same can be done for CAN2 Rx PB5.<BR>
 Will need to configure PB4 to generate some boiler plate EXTI code and investigate further...
 	
 In this version, I am starting to experiment with detecting a button *"long press"*.<BR>
