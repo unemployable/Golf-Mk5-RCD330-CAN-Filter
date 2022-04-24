@@ -107,7 +107,7 @@ So in this blue board version, only the vehicle CAN is able to wake the STM32 fr
 I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.
 
 ...
-void EXTI15_10_IRQHandler(void)<BR>
+void EXTI15_10_IRQHandler(void)
 {<BR>
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */<BR>
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);<BR>
