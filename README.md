@@ -107,9 +107,9 @@ So in this blue board version, only the vehicle CAN is able to wake the STM32 fr
 I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.</S>
 	
 Finally got EXTI working directly with the CAN Rx pins.<BR>
-In <I><B>stm32f1xx_it.c</B></I>, needed to explicitly add each GPIO Pin explicitly into the IRQ Handlers.<BR>
-	For CAN1 Rx (PA11): in <B>EXTI15_10_IRQHandler()</B> added <B>GPIO_PIN_11</B>.<BR>
-For CAN2 Rx (PB5):  in <B>EXTI9_5_IRQHandler()<?B> added <B>GPIO_PIN_5</B>.
+In <I><B>stm32f1xx_it.c</B></I>, needed to explicitly add each GPIO Pin into the IRQ Handlers.<BR>
+For CAN1 Rx (PA11): in <B>EXTI15_10_IRQHandler()</B> added <B>GPIO_PIN_11</B>.<BR>
+For CAN2 Rx (PB5):  in <B>EXTI9_5_IRQHandler()</B> added <B>GPIO_PIN_5</B>.
 ```c
 void EXTI9_5_IRQHandler(void)
 {
