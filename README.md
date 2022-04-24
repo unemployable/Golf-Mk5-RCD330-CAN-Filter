@@ -49,14 +49,6 @@ Cabling on the Blue (SWD) Dual Filter Board:<BR>
 | CAN2 | High | Blue |
 | CAN2 | Low | Yellow |
 	
-<B>CAN1 is connected to the RCD330</B>
-* GREEN	 CAN High
-* PURPLE CAN Low
-
-<B>CAN2 is connected to the Vehicle</B>
-* BLUE	 CAN High
-* YELLOW CAN Low
-
 <B>PQ Quadlock connector (cheapy version, CAN is white/orange on the better one)</B>
 * Green	 CAN High
 * Purple CAN Low
