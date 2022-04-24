@@ -155,8 +155,9 @@ This is in addition to adding the pins to <B>MX_GPIO_Init()</B> in <B><I>main.c<
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 ```
-Had to configure some "fake" EXTI pins (PB4 & PA5) in order to get CubeIDE to generate the required EXTI template functions.
+Had to configure some "fake" EXTI pins (PB4 & PA5) in order to get CubeIDE to generate the required EXTI templates.
 Needed to manually modify them to use the correct pins (as above) and comment out any extra unwanted code for the fake pins...
+There should no longer be a need to solder additional wires to enable EXTI work arounds.
 	
 In this version, I am starting to experiment with detecting a button *"long press"*.<BR>
 Currently, a *long press* of the Menu button switches it to the default *RCD330 mode*, (short press for *MFD mode*).<BR>
