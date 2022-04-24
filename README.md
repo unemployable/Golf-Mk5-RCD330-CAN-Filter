@@ -106,7 +106,7 @@ The PA15 EXTI link above, is connected to CAN2 Rx as a work around.<BR>
 So in this blue board version, only the vehicle CAN is able to wake the STM32 from sleep/stop state.<BR>
 I think this is reasonable as the watchdog is also only reset by certain messages coming from the vehicle.
 
-```
+```c
 void EXTI15_10_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
@@ -118,7 +118,7 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE BEGIN EXTI15_10_IRQn 1 */
 
   /* USER CODE END EXTI15_10_IRQn 1 */
-}<BR>
+}
 ```
 	
 	
