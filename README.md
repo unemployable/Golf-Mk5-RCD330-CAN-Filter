@@ -104,6 +104,7 @@ The blue board also has 4 *"conf"* solder pads available, connected to GPIO pins
 	| CONF_W222 | PC11     | UART4 Rx |
 	| CONF_W166 | PC10     | UART4 Tx |
 	| CONF_BMW  | PA15     | Was EXTI |
+
 An FTDI adapter was then attached to UART4 during debugging.
 
 <S>I could not figure out how to get existing CAN & UART Rx pins to also trigger EXTI (needed to wake from deep sleep).<BR>
