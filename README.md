@@ -207,7 +207,7 @@ This forces *"High-Speed mode"* and has the highest consumption (max. 75mA).<BR>
 Tying this to Vcc should enable *"Standby or SLEEP mode"* (typ. under 1mA), which would be useful combined with STM32 sleep/stop mode.<BR>
 As the CAN Driver runs on 5V and the STM32 on 3.3V, I was concerned that controlling the *Rs* pin directly from GPIO (PA15) might not make it go into full sleep mode.  Testing has shown that there is no difference between 3.3V and 5V applied to the *Rs* Pin.<BR>
 Disappointingly, dynamically controlling both drivers via GPIO has only reduced sleep mode current by around 10mA.<BR>
-Note: I found the easiest way to cut the Gnd connection to Pin 8 on the CAN2 driver, was to lightly drill out the Via on the underside of the board.
+Note: I found the easiest way to cut the Gnd connection to Pin 8 on the CAN1 driver, was to lightly drill out the Via on the underside of the board.
 
 
 <B>Version 2, ready for testing in the car:</B><BR>
