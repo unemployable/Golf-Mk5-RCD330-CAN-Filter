@@ -201,7 +201,7 @@ I have also implemented the 0x436 & 0x439 filtering, but it does not seem to be 
 	
 Vehicle time & temperature on the RCD330 also works (i.e. when not using Android Auto / CarPlay).
 
-Power consumption is not that great, around 50ma running and 20ma in sleep/stop mode.<BR>
+Power consumption is not that great, around 50mA running and 20mA in sleep/stop mode.<BR>
 The CAN drivers on these boards (MCP2551) seem to have pin 8 (Rs) permanently connected to Gnd.<BR>
 This forces *"High-Speed mode"* and has the highest consumption (max. 75mA).<BR>
 Tying this to Vcc should enable *"Standby or SLEEP mode"* (typ. under 1mA), which would be useful combined with STM32 sleep/stop mode.<BR>
