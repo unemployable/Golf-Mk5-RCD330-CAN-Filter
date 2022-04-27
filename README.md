@@ -206,7 +206,7 @@ The CAN drivers on these boards (MCP2551) seem to have pin 8 (Rs) permanently co
 This forces *"High-Speed mode"* and has the highest consumption (max. 75mA).<BR>
 Tying this to Vcc should enable *"Standby or SLEEP mode"* (typ. under 1mA), which would be useful combined with STM32 sleep/stop mode.<BR>
 As the CAN Driver runs on 5V and the STM32 on 3.3V, I was concerned that controlling the "S" pin directly from GPIO (PA15) might not make it go into full sleep mode.  Testing has shown that there is no difference between 3.3V and 5V applied to the "S" Pin.<BR>
-Disappointingly, disabling both drivers via GPIO has only reduced sleep mode current by around 10mA.
+Disappointingly, dynamically disabling both drivers via GPIO has only reduced sleep mode current by around 10mA.
 
 
 <B>Version 2, ready for testing in the car:</B><BR>
