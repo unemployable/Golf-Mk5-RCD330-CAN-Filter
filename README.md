@@ -106,7 +106,7 @@ The blue board also has 4 *"conf"* solder pads available, connected as follows:
 | CONF_S4  | PC12 | LED |
 | CONF_W222 | PC11 | UART4 Rx |
 | CONF_W166 | PC10 | UART4 Tx |
-| CONF_BMW | PA15 | Was EXTI (proposed CAN Driver "*Rs*" Pin) |
+| CONF_BMW | PA15 | Was EXTI (now CAN Driver "*Rs*" Pin) |
 
 An FTDI adapter was then attached to UART4 during debugging.
 
