@@ -168,7 +168,7 @@ This is in addition to adding the pins to <B>MX_GPIO_Init()</B> in <B><I>main.c<
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 ```
-Note, had to configure some "fake" EXTI pins (PA5 & PA10) in order to get CubeIDE to generate the required EXTI IRQHandler templates.<BR>
+Note: had to configure some "fake" EXTI pins (PA5 & PA10) in order to get CubeIDE to generate the required EXTI IRQHandler templates.<BR>
 Needed to manually modify them to use the correct pins (as above) and comment out any extra unwanted code for the fake pins...<BR>
 There should no longer be a need to solder additional wires to enable EXTI work arounds.<BR>
 Unfortunately it is not possible to also enable UART4 Rx EXTI (PA11), as it is shared with CAN1 Rx (PC11) (i.e. both pin 11).<BR>
