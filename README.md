@@ -78,7 +78,7 @@ It turns out there are only a few messages being checked/modified:<BR>
 | Msg Id | Function |
 | --- | --- |
 | **0x2c3/0x575** | Reset the watch dog timer (avoid sleep/stop mode, while car is active) |
-| **0x5c1** | Steering Wheel buttons, Up/Down map to Next/Prev in RCD330 |
+| **0x5c1** | Steering Wheel buttons, Up/Down map to Next/Prev in RCD330<BR>  Note: The 0x5c1 filter also changes the CAN DLC (length) from 1 to 8 for all button messages. |
 | **0x436/0x439** | Presumably to fix power down issues, although my car does not send them. The CAN Gateway might be a version that already sends power down messages that the RCD330 understands. |
 
 
@@ -86,8 +86,7 @@ It turns out there are only a few messages being checked/modified:<BR>
 The module changes the operation of the Up/Down buttons by switching between two modes (using Menu/Ok).<BR>
 Pressing Menu (*MFD mode*), only the MFD screens are changed.<BR>
 Pressing Ok (*RCD330 mode*), both the MFD and RCD330 are changed (i.e. it sends extra messages for Next/Prev to the RCD330).<BR>
-Unfortunately, there is no way to stop the MFD being updated by using a CAN bus filter at the radio.<BR>
-Note: The 0x5c1 filter also changes the CAN DLC (length) from 1 to 8 for all button messages.
+Unfortunately, there is no way to stop the MFD being updated by using a CAN bus filter at the radio.
 
 My car only has an MFD (Midline, Multi Function Display) in the instrument cluster which does not use the Menu button, making it available for other uses.  However, using the Ok button to switch modes is annoying, as it will still impact the MFD on several screens (in particular the speed alert).<BR>
 ![Golf Mk5 MFD](pics/MFD.png)
