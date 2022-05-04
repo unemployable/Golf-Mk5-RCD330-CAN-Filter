@@ -78,7 +78,7 @@ It turns out there are only a few messages being checked/modified:<BR>
 | Msg Id | Function |
 | --- | --- |
 | **0x2c3/0x575** | Reset the watch dog timer (avoid sleep/stop mode, while car is active) |
-| **0x5c1** | Steering Wheel buttons, Up/Down map to Next/Prev in RCD330<BR>  Note: The 0x5c1 filter also changes the CAN DLC (length) from 1 to 8 for all button messages. |
+| **0x5c1** | Steering Wheel buttons, Up/Down map to Next/Prev in RCD330<BR>  Also changes the CAN DLC (length) from 1 to 8 for all button messages. |
 | **0x436/0x439** | Presumably to fix power down issues, although my car does not send them. The CAN Gateway might be a version that already sends power down messages that the RCD330 understands. |
 
 
