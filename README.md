@@ -212,6 +212,7 @@ Note: I found the easiest way to cut the Gnd connection to pin 8 on the CAN1 dri
 
 
 <B>Version 2, ready for testing in the car:</B><BR>
+(Still has the EXTI mod, i.e. pre *Rs* pin mod - which will be in V3) 
 ![RCD330 Dual CAN Filter Blue](pics/RCD330_Dual_CAN_Filter_Blue_small.png)
 
 The RCA socket is for connecting the vehicle CAN Bus to the rear Flip Camera (Dynamic Lines).<BR>
