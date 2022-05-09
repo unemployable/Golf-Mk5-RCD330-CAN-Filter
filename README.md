@@ -225,6 +225,7 @@ I've also included a 500mA fuse, just in case!
 
 If this 2nd prototype proves to be reliable, I am considering some further enhancements:
 
+* Change *long press* mute (Google Assistant) to automatically send "clear" msgs after 1 sec.
 * See if there are any other useful RCD330 messages that could also be activated from the steering wheel buttons.
 * Investigate DDP & TP2.0 further, with the aim of scrolling through MFD screens from the radio.
 
